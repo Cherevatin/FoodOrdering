@@ -6,6 +6,8 @@ namespace FoodOrdering.Domain.Entities
 {
     public class Dish : BaseEntity
     {
+        public string Name { get; set; }
+
         public string Ingredients { get; set; }
 
         public double Price { get; set; }
