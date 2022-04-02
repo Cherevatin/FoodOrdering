@@ -1,19 +1,20 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using FoodOrdering.Domain.Entities;
 
 namespace FoodOrdering.Application.DishService
 {
     public interface IDishService
     {
-        //IEnumerable<Dish> GetAllDishes();
+        Task<IEnumerable<Dish>> GetAllDishesAsync();
 
-        //Dish GetDish(Guid id);
+        Task<Dish> GetDishAsync(Guid id);
 
-        void CreateDish(Dish dish);
+        Task CreateDishAsync(Dish dish);
 
-        void UpdateDish(Dish dish);
+        Task UpdateDishAsync(Dish dish);
 
-        void DeleteDish(Guid id);
+        Task DeleteDishAsync(Guid id);
     }
 }

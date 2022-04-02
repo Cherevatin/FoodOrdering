@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using FoodOrdering.Domain.Entities;
 
@@ -7,14 +8,14 @@ namespace FoodOrdering.Application.DishesMenuService
 {
     public interface IDishesMenuService
     {
-        IEnumerable<DishesMenu> GetAllDishesMenus();
+        Task<IEnumerable<DishesMenu>> GetAllDishesMenusAsync();
 
-        DishesMenu GetDishesMenu(Guid id);
+        Task<DishesMenu> GetDishesMenuAsync(Guid id);
 
-        void CreateDishesMenu(DishesMenu dish);
+        Task CreateDishesMenuAsync(DishesMenu dish);
 
-        void UpdateDishesMenu(DishesMenu dish);
+        Task UpdateDishesMenuAsync(DishesMenu dish);
 
-        void DeleteDishesMenu(Guid id);
+        Task DeleteDishesMenuAsync(Guid id);
     }
 }

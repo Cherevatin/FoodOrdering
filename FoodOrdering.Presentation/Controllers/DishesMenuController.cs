@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using FoodOrdering.Domain.Entities;
 using FoodOrdering.Application.DishesMenuService;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,9 +21,9 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpGet(nameof(GetAllDishesMenus))]
-        public IActionResult GetAllDishesMenus()
+        public async Task<IActionResult> GetAllDishesMenus()
         {
-            var result = _service.GetAllDishesMenus();
+            var result = await _service.GetAllDishesMenusAsync();
             if (result is not null)
             {
                 return Ok(result);
@@ -31,9 +32,9 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpGet(nameof(GetDishesMenu) + "/{id}")]
-        public IActionResult GetDishesMenu(Guid id)
+        public async Task<IActionResult> GetDishesMenu(Guid id)
         {
-            var result = _service.GetDishesMenu(id);
+            var result = await _service.GetDishesMenuAsync(id);
             if (result is not null)
             {
                 return Ok(result);
@@ -43,24 +44,24 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpPost(nameof(CreateDishesMenu))]
-        public IActionResult CreateDishesMenu(DishesMenu dishesMenu)
+        public async Task<IActionResult> CreateDishesMenu(DishesMenu dishesMenu)
         {
-            _service.CreateDishesMenu(dishesMenu);
+            await _service.CreateDishesMenuAsync(dishesMenu);
             return Ok("Menu has been created");
         }
 
         [HttpPut(nameof(UpdateDishesMenu) + "/{id}")]
-        public IActionResult UpdateDishesMenu(DishesMenu dishesMenu)
+        public async Task<IActionResult> UpdateDishesMenu(DishesMenu dishesMenu)
         {
-            _service.UpdateDishesMenu(dishesMenu);
+            await _service.UpdateDishesMenuAsync(dishesMenu);
             return Ok("Menu has been updated");
         }
 
 
         [HttpDelete(nameof(DeleteDishesMenu) + "/{id}")]
-        public IActionResult DeleteDishesMenu(Guid id)
+        public async Task<IActionResult> DeleteDishesMenu(Guid id)
         {
-            _service.DeleteDishesMenu(id);
+            await _service.DeleteDishesMenuAsync(id);
             return Ok("Menu has been deleted");
         }
     }

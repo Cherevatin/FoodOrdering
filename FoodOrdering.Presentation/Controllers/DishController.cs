@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-using FoodOrdering.Domain.Entities;
 using FoodOrdering.Application.DishService;
+using FoodOrdering.Domain.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,49 +20,59 @@ namespace FoodOrdering.Presentation.Controllers
             _service = service;
         }
 
-        //[HttpGet(nameof(GetAllDishes))]
-        //public IActionResult GetAllDishes()
-        //{
-        //    var result = _service.GetAllDishes();
-        //    if (result is not null)
-        //    {
-        //        return Ok(result);
-        //    }
-        //    return BadRequest("No dishes found");
-        //}
+        [HttpGet(nameof(GetAllDishes))]
+        public async Task<IActionResult> GetAllDishes()
+        {
+            var result = await _service.GetAllDishesAsync();
+            if (result is not null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("No dishes found");
+        }
 
-        //[HttpGet(nameof(GetDish) + "/{id}")]
-        //public IActionResult GetDish(Guid id)
-        //{
-        //    var result = _service.GetDish(id);
-        //    if (result is not null)
-        //    {
-        //        return Ok(result);
-        //    }
-        //    return BadRequest("Dish not found");
-
-        //}
+        [HttpGet(nameof(GetDish) + "/{id}")]
+        public async Task<IActionResult> GetDish(Guid id)
+        {
+            var result = await _service.GetDishAsync(id);
+            if (result is not null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Dish not found");
+        }
 
         [HttpPost(nameof(CreateDish))]
-        public IActionResult CreateDish(Dish dish)
+        public async Task<ActionResult<Dish>> CreateDish(Dish dish)
         {
-            _service.CreateDish(dish);
+            await _service.CreateDishAsync(dish);
             return Ok("Dish has been created");
         }
 
         [HttpPut(nameof(UpdateDish)+"/{id}")]
-        public IActionResult UpdateDish(Dish dish)
+        public async Task<ActionResult> UpdateDish(Guid id, Dish dish)
         {
-            _service.UpdateDish(dish);
+            if (id != dish.Id)
+            {
+                return BadRequest();
+            }
+
+            await _service.UpdateDishAsync(dish);
             return Ok("Dish has been updated");
         }
 
-
         [HttpDelete(nameof(DeleteDish) + "/{id}")]
-        public IActionResult DeleteDish(Guid id)
+        public async Task<ActionResult> DeleteDish(Guid id)
         {
-            _service.DeleteDish(id);
-            return Ok("Dish has been deleted");
+            try
+            {
+                await _service.DeleteDishAsync(id);
+                return Ok("Dish has been deleted");
+            }
+            catch
+            {
+                return NotFound("Dish not found");
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace FoodOrdering.Presentation
 
             services.AddDbContext<FoodOrderingContext>(opt => opt.UseNpgsql(connectionString));
 
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(AsyncRepository<>));
 
             services.AddTransient<IDishService, DishService>();
             services.AddTransient<IDishesMenuService, DishesMenuService>();
