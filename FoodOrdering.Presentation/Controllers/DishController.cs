@@ -43,14 +43,14 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpPost(nameof(CreateDish))]
-        public async Task<ActionResult<Dish>> CreateDish(Dish dish)
+        public async Task<IActionResult> CreateDish(Dish dish)
         {
             await _service.CreateDishAsync(dish);
             return Ok("Dish has been created");
         }
 
         [HttpPut(nameof(UpdateDish)+"/{id}")]
-        public async Task<ActionResult> UpdateDish(Guid id, Dish dish)
+        public async Task<IActionResult> UpdateDish(Guid id, Dish dish)
         {
             if (id != dish.Id)
             {
@@ -62,7 +62,7 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpDelete(nameof(DeleteDish) + "/{id}")]
-        public async Task<ActionResult> DeleteDish(Guid id)
+        public async Task<IActionResult> DeleteDish(Guid id)
         {
             try
             {
