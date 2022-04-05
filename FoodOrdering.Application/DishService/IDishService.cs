@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FoodOrdering.Domain.Entities;
+using FoodOrdering.Application.DTO.Dish;
 
 namespace FoodOrdering.Application.DishService
 {
     public interface IDishService
     {
-        Task<IEnumerable<Dish>> GetAllDishesAsync();
+        Task<IEnumerable<GetAllDishesDTO>> GetAllDishesAsync();
 
-        Task<Dish> GetDishAsync(Guid id);
+        Task<DishDTO> GetDishAsync(Guid id);
 
-        Task CreateDishAsync(Dish dish);
+        Task CreateDishAsync(DishDTO dishDTO);
 
-        Task UpdateDishAsync(Dish dish);
+        Task UpdateDishAsync(DishDTO dishDTO);
 
         Task DeleteDishAsync(Guid id);
+
+        Task<bool> DishExists(Guid id); 
     }
 }

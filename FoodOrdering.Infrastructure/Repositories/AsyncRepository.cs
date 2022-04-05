@@ -41,5 +41,8 @@ namespace FoodOrdering.Infrastructure.Repositories
             _foodOrderingContext.Entry(entity).State = EntityState.Modified;
             return _foodOrderingContext.SaveChangesAsync();
         }
+
+        public async Task<bool> IsExists(Guid id) => await _entities.AnyAsync(e => e.Id == id);
+      
     }
 }

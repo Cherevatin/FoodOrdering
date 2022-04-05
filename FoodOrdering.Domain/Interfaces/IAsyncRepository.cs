@@ -17,5 +17,7 @@ namespace FoodOrdering.Domain.Interfaces
         Task RemoveAsync(T entity);
 
         Task<IEnumerable<T>> GetAllAsync();
+
+        Task<bool> IsExists(Guid id);
     }
 }
