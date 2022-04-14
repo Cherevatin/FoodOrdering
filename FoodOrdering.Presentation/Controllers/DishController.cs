@@ -2,109 +2,113 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-using FoodOrdering.Application.DishService;
-using FoodOrdering.Domain.Entities;
-using FoodOrdering.Presentation.ViewModels;
 using AutoMapper;
 using FoodOrdering.Application.Infrastructure;
-using FoodOrdering.Application.DTO.Dish;
+using FoodOrdering.Presentation.ViewModels.Dish;
+using FoodOrdering.Application.Interfaces;
+using FoodOrdering.Application.Dtos.Dish;
+using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FoodOrdering.Presentation.Controllers
 {
-    [Route("api/")]
+    [Route("api/dish")]
     [ApiController]
     public class DishController : Controller
     {
         private readonly IDishService _service;
 
-        public DishController(IDishService service)
+        private readonly IMapper _mapper;
+
+        public DishController(IDishService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
-        [HttpGet(nameof(GetAllDishes))]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAllDishes()
         {
-            var result = await _service.GetAllDishesAsync();
-            return Ok(result);
+            try
+            {
+                var dishesDto = await _service.GetAllDishesAsync();
+                var dishesViewModel = _mapper.Map<List<GetAllDishesViewModel>>(dishesDto);
+
+                return Ok(dishesViewModel);
+            }
+            catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        [HttpGet(nameof(GetDish) + "/{id}")]
+        [HttpGet("get/{id}")]
         public async Task<IActionResult> GetDish(Guid id)
         {
-            var result = await _service.GetDishAsync(id);
-            if (result is not null)
+            try
             {
-                return Ok(result);
+                var dishDto = await _service.GetDishAsync(id);
+                var dishViewModel = _mapper.Map<GetDishViewModel>(dishDto);
+                return Ok(dishViewModel);
             }
-            return BadRequest("Dish not found");
+            catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        [HttpPost(nameof(AddDish))]
+        [HttpPost("add")]
         public async Task<IActionResult> AddDish(AddDishViewModel model)
         {
-            DishDTO dishDto = new()
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                Ingredients = model.Ingredients,
-                Price = model.Price,
-                Proteins = model.Proteins,
-                Fats = model.Fats,
-                Carbohydrates = model.Carbohydrates,
-                Calories = model.Calories,
-                Weight = model.Weight
-            };
+                DishDto dishDTO = _mapper.Map<DishDto>(model);
 
-            await _service.CreateDishAsync(dishDto);
-            return Ok("Dish has been created");
+                await _service.CreateDishAsync(dishDTO);
+
+                return Ok("Dish has been created");
+            }
+            else
+            {
+                return BadRequest("Model not valid");
+            }
         }
 
-        [HttpPut(nameof(EditDish)+"/{id}")]
+        [HttpPut("edit/{id}")]
         public async Task<IActionResult> EditDish(Guid id, EditDishViewModel model)
         {
             if (ModelState.IsValid)
             {
-                try { 
-                    DishDTO dishDto = new()
-                    {
-                        Id = id,
-                        Name = model.Name,
-                        Ingredients = model.Ingredients,
-                        Price = model.Price,
-                        Proteins = model.Proteins,
-                        Fats = model.Fats,
-                        Carbohydrates = model.Carbohydrates,
-                        Calories = model.Calories,
-                        Weight = model.Weight
-                    };
+                DishDto dishDTO = _mapper.Map<DishDto>(model);
 
-                    await _service.UpdateDishAsync(dishDto);
+                try 
+                { 
+                    await _service.UpdateDishAsync(dishDTO);
                     return Ok("Dish has been updated");
                 }
-                catch(ValidationException ex)
+                catch(Exception ex)
                 {
                     return NotFound(ex.Message);
                 }
             }
             else
             {
-                return View(model);
+                return BadRequest("Model not valid");
             }
         }
 
-        [HttpDelete(nameof(DeleteDish) + "/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteDish(Guid id)
         {
-            if (await _service.DishExists(id))
+            try
             {
                 await _service.DeleteDishAsync(id);
                 return Ok("Dish has been deleted");
             }
-            else
+            catch(Exception ex)
             {
-                return NotFound("Dish not found");
+                return NotFound(ex.Message);
             }
         }
     }

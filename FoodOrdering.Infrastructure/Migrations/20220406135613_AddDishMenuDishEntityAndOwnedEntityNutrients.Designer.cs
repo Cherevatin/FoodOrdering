@@ -3,15 +3,17 @@ using System;
 using FoodOrdering.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FoodOrdering.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodOrderingContext))]
-    partial class FoodOrderingContextModelSnapshot : ModelSnapshot
+    [Migration("20220406135613_AddDishMenuDishEntityAndOwnedEntityNutrients")]
+    partial class AddDishMenuDishEntityAndOwnedEntityNutrients
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +47,7 @@ namespace FoodOrdering.Infrastructure.Migrations
                     b.ToTable("Dishes");
                 });
 
-            modelBuilder.Entity("FoodOrdering.Domain.Entities.Menu", b =>
+            modelBuilder.Entity("FoodOrdering.Domain.Entities.DishMenu", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,22 +64,22 @@ namespace FoodOrdering.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Menus");
+                    b.ToTable("DishMenus");
                 });
 
-            modelBuilder.Entity("FoodOrdering.Domain.Entities.MenuDish", b =>
+            modelBuilder.Entity("FoodOrdering.Domain.Entities.DishMenuDish", b =>
                 {
                     b.Property<Guid>("DishId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("MenuId")
+                    b.Property<Guid>("DishMenuId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("DishId", "MenuId");
+                    b.HasKey("DishId", "DishMenuId");
 
-                    b.HasIndex("MenuId");
+                    b.HasIndex("DishMenuId");
 
-                    b.ToTable("MenuDish");
+                    b.ToTable("DishMenuDishes");
                 });
 
             modelBuilder.Entity("FoodOrdering.Domain.Entities.Dish", b =>
@@ -110,33 +112,33 @@ namespace FoodOrdering.Infrastructure.Migrations
                     b.Navigation("Nutrients");
                 });
 
-            modelBuilder.Entity("FoodOrdering.Domain.Entities.MenuDish", b =>
+            modelBuilder.Entity("FoodOrdering.Domain.Entities.DishMenuDish", b =>
                 {
                     b.HasOne("FoodOrdering.Domain.Entities.Dish", "Dish")
-                        .WithMany("Dishes")
+                        .WithMany("DishMenuDishes")
                         .HasForeignKey("DishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodOrdering.Domain.Entities.Menu", "Menu")
-                        .WithMany("Dishes")
-                        .HasForeignKey("MenuId")
+                    b.HasOne("FoodOrdering.Domain.Entities.DishMenu", "DishMenu")
+                        .WithMany("DishMenuDishes")
+                        .HasForeignKey("DishMenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Dish");
 
-                    b.Navigation("Menu");
+                    b.Navigation("DishMenu");
                 });
 
             modelBuilder.Entity("FoodOrdering.Domain.Entities.Dish", b =>
                 {
-                    b.Navigation("Dishes");
+                    b.Navigation("DishMenuDishes");
                 });
 
-            modelBuilder.Entity("FoodOrdering.Domain.Entities.Menu", b =>
+            modelBuilder.Entity("FoodOrdering.Domain.Entities.DishMenu", b =>
                 {
-                    b.Navigation("Dishes");
+                    b.Navigation("DishMenuDishes");
                 });
 #pragma warning restore 612, 618
         }

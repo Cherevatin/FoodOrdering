@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FoodOrdering.Presentation.ViewModels
+namespace FoodOrdering.Application.Dtos.Dish
 {
-    public class GetAllDishesViewModel
+    public class GetAllDishesDto
     {
         public Guid Id { get; set; }
 

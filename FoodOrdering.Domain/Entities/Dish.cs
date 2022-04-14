@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿using System.Collections.Generic;
 using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Domain.Entities
@@ -14,21 +13,15 @@ namespace FoodOrdering.Domain.Entities
 
         public string ImageName { get; set; }
 
-        //public Nutrients Nutrients { get; set; }
-
-        public double? Proteins { get; set; }
-
-        public double? Fats { get; set; }
-
-        public double? Carbohydrates { get; set; }
-
-        public double? Calories { get; set; }
+        public Nutrients Nutrients { get; set; }
 
         public double Weight { get; set; }
 
+        public ICollection<MenuDish> Dishes { get; set; } 
 
-        public Guid? DishesMenuId { get; set; }
-
-        public DishesMenu DishesMenu { get; set; }
+        public Dish()
+        {
+            Dishes = new List<MenuDish>();
+        }
     }
 }

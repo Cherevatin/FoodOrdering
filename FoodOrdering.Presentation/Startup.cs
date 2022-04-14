@@ -1,20 +1,17 @@
-using FoodOrdering.Application.DishesMenuService;
-using FoodOrdering.Application.DishService;
-using FoodOrdering.Domain.Interfaces;
-using FoodOrdering.Infrastructure;
-using FoodOrdering.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using FoodOrdering.Application.Services;
+using FoodOrdering.Application.Interfaces;
+using FoodOrdering.Domain.Interfaces;
+using FoodOrdering.Infrastructure;
+using FoodOrdering.Infrastructure.Repositories;
+using FoodOrdering.Application.Infrastructure;
 
 namespace FoodOrdering.Presentation
 {
@@ -30,18 +27,26 @@ namespace FoodOrdering.Presentation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(PresentationAutoMapper), 
+                typeof(ApplicationAutoMapper));
+
+
             string connectionString = 
                 Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<FoodOrderingContext>(opt => opt.UseNpgsql(connectionString));
 
-            services.AddScoped(typeof(IAsyncRepository<>), typeof(AsyncRepository<>));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            services.AddTransient<IDishRepository, DishRepository>();
+            services.AddTransient<IMenuRepository, MenuRepository>();
 
             services.AddTransient<IDishService, DishService>();
-            services.AddTransient<IDishesMenuService, DishesMenuService>();
+            services.AddTransient<IMenuService, MenuService>();
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddControllersWithViews();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FoodOrdering", Version = "v1" });

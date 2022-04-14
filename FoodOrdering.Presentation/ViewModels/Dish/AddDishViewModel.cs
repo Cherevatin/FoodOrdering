@@ -6,11 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FoodOrdering.Presentation.ViewModels
+namespace FoodOrdering.Presentation.ViewModels.Dish
 {
-    public class EditDishViewModel
+    public class AddDishViewModel
     {
-        //public Guid Id { get; set; }
 
         [Required(ErrorMessage = "Please enter dish name!")]
         [StringLength(100)]

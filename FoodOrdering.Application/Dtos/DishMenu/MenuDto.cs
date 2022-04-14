@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using FoodOrdering.Domain.Common;
-
-namespace FoodOrdering.Domain.Entities
+namespace FoodOrdering.Application.Dtos.DishMenu
 {
-    public class DishesMenu : BaseEntity
+    public class MenuDto
     {
+        public Guid Id { get; set; }
+
         public DateTime StartDate { get; set; }
 
         public DateTime ExpirationDate { get; set; }
 
         public bool ReadyToOrder { get; set; }
 
-
-        public ICollection<Dish> Dishes { get; set; }
+        public List<Guid> Dishes { get; set; }
     }
 }
