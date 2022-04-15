@@ -26,7 +26,7 @@ namespace FoodOrdering.Infrastructure
             Menus = menuRepository;
         }
 
-        public async Task<int> Complete() => await _context.SaveChangesAsync();
+        public async Task<int> Save() => await _context.SaveChangesAsync();
        
     }
 }

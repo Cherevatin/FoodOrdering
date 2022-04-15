@@ -11,8 +11,6 @@ namespace FoodOrdering.Domain.Interfaces
     {
         Task<bool> MenuExists(Guid id);
 
-        Task MenuUpdate(Menu menu);
-
-        Task AddDishes(Guid menuId, List<Guid> dishes);
+        Task<Menu> GetMenuWithDishesById(Guid id);
     }
 }

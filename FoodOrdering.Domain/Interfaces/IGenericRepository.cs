@@ -14,6 +14,6 @@ namespace FoodOrdering.Domain.Interfaces
 
         void Remove(T entity);
 
-        void Update(T entity);
+        void ToModifiedState(T entity);
     }
 }

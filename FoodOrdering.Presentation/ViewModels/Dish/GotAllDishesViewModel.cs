@@ -2,7 +2,7 @@
 
 namespace FoodOrdering.Presentation.ViewModels.Dish
 {
-    public class GetAllDishesViewModel
+    public class GotAllDishesViewModel
     {
         public Guid Id { get; set; }
 

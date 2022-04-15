@@ -2,7 +2,7 @@
 
 namespace FoodOrdering.Application.Dtos.Dish
 {
-    public class GetAllDishesDto
+    public class GotAllDishesDto
     {
         public Guid Id { get; set; }
 

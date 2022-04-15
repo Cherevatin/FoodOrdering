@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FoodOrdering.Application.Dtos.DishMenu;
+using FoodOrdering.Application.Dtos.Menu;
 using FoodOrdering.Domain.Entities;
 
 namespace FoodOrdering.Application.Interfaces
 {
     public interface IMenuService
     {
-        Task<IEnumerable<GetAllMenusDto>> GetAllMenusAsync();
+        Task<IEnumerable<GotAllMenusDto>> GetAllMenusAsync();
 
-        Task<MenuDto> GetMenuAsync(Guid id);
+        Task<GotMenuDetailsDto> GetMenuDetails(Guid id);
 
-        Task CreateMenuAsync(MenuDto menu);
+        Task<GotMenuDto> GetMenuAllInfo(Guid id);
 
-        Task UpdateMenuAsync(MenuDto menu);
+        Task<GotDishesDto> GetAllDishes(Guid id);
 
-        Task AddDishToMenu(AddDishToMenuDto dish);
+        Task CreateMenuAsync(AddMenuDto dto);
+
+        Task UpdateMenuAsync(Guid id, EditMenuDto dto);
+
+        Task AddDishToMenu(Guid id, AddDishToMenuDto dto);
 
         Task DeleteMenuAsync(Guid id);
     }

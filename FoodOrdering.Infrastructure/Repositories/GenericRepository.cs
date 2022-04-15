@@ -28,7 +28,7 @@ namespace FoodOrdering.Infrastructure.Repositories
        
         public void Remove(T entity) => _entities.Remove(entity);
     
-        public void Update(T entity) => _context.Entry(entity).State = EntityState.Modified;
+        public void ToModifiedState(T entity) => _context.Entry(entity).State = EntityState.Modified;
 
     }
 }

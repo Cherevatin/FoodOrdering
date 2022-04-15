@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace FoodOrdering.Presentation.ViewModels.Menu
 {
-    public class GetMenuViewModel
+    public class GotMenuDetailsViewModel
     {
         public DateTime StartDate { get; set; }
 
         public DateTime ExpirationDate { get; set; }
 
         public bool ReadyToOrder { get; set; }
-
-        public List<Guid> Dishes { get; set; }
     }
 }

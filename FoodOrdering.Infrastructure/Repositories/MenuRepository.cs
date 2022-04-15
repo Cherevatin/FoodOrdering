@@ -17,20 +17,14 @@ namespace FoodOrdering.Infrastructure.Repositories
 
         }
 
-        Task<bool> IMenuRepository.MenuExists(Guid id) => _entities.AnyAsync(e => e.Id == id);
-        
-        async Task IMenuRepository.MenuUpdate(Menu newMenu)
+        public async Task<bool> MenuExists(Guid id)
         {
-            var oldMenu = await _entities.Include(m => m.Dishes).FirstOrDefaultAsync(m => m.Id == newMenu.Id);
-            
-            oldMenu.Update(newMenu);
+            return await _entities.AnyAsync(e => e.Id == id);
         }
 
-        public async Task AddDishes(Guid menuId, List<Guid> dishes)
+        public async Task<Menu> GetMenuWithDishesById(Guid id)
         {
-            var menu = await _entities.Include(m => m.Dishes).FirstOrDefaultAsync(m => m.Id == menuId);
-
-            menu.AddDish(dishes);
+            return await _entities.Include(m => m.Dishes).FirstOrDefaultAsync(m => m.Id == id);
         }
-    }   
+    }
 }

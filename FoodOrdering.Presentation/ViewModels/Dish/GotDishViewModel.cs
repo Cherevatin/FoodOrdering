@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrdering.Presentation.ViewModels.Dish
 {
-    public class GetDishViewModel
+    public class GotDishViewModel
     {
         public string Name { get; set; }
 

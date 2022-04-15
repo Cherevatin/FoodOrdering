@@ -11,7 +11,8 @@ using FoodOrdering.Application.Interfaces;
 using FoodOrdering.Domain.Interfaces;
 using FoodOrdering.Infrastructure;
 using FoodOrdering.Infrastructure.Repositories;
-using FoodOrdering.Application.Infrastructure;
+using FoodOrdering.Application.AutoMapper;
+using FoodOrdering.Presentation.AutoMapper;
 
 namespace FoodOrdering.Presentation
 {
@@ -27,8 +28,12 @@ namespace FoodOrdering.Presentation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(PresentationAutoMapper), 
-                typeof(ApplicationAutoMapper));
+            services.AddAutoMapper(
+                typeof(DishAutoMapperPresentation),
+                typeof(DishAutoMapperApplication),
+                typeof(MenuAutoMapperPresentation), 
+                typeof(MenuAutoMapperApplication)
+                );
 
 
             string connectionString = 

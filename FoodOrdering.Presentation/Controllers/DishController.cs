@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 using AutoMapper;
-using FoodOrdering.Application.Infrastructure;
 using FoodOrdering.Presentation.ViewModels.Dish;
 using FoodOrdering.Application.Interfaces;
 using FoodOrdering.Application.Dtos.Dish;
@@ -32,10 +31,10 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                var dishesDto = await _service.GetAllDishesAsync();
-                var dishesViewModel = _mapper.Map<List<GetAllDishesViewModel>>(dishesDto);
+                var dto = await _service.GetAllDishesAsync();
+                var viewModel = _mapper.Map<List<GotAllDishesViewModel>>(dto);
 
-                return Ok(dishesViewModel);
+                return Ok(viewModel);
             }
             catch(Exception ex)
             {
@@ -44,13 +43,13 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpGet("get/{id}")]
-        public async Task<IActionResult> GetDish(Guid id)
+        public async Task<IActionResult> GetDish(Guid dishId)
         {
             try
             {
-                var dishDto = await _service.GetDishAsync(id);
-                var dishViewModel = _mapper.Map<GetDishViewModel>(dishDto);
-                return Ok(dishViewModel);
+                var dto = await _service.GetDishAsync(dishId);
+                var viewModel = _mapper.Map<GotDishViewModel>(dto);
+                return Ok(viewModel);
             }
             catch(Exception ex)
             {
@@ -63,9 +62,9 @@ namespace FoodOrdering.Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                DishDto dishDTO = _mapper.Map<DishDto>(model);
+                AddDishDto dto = _mapper.Map<AddDishDto>(model);
 
-                await _service.CreateDishAsync(dishDTO);
+                await _service.CreateDishAsync(dto);
 
                 return Ok("Dish has been created");
             }
@@ -76,15 +75,14 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpPut("edit/{id}")]
-        public async Task<IActionResult> EditDish(Guid id, EditDishViewModel model)
+        public async Task<IActionResult> EditDish(Guid dishId, EditDishViewModel model)
         {
             if (ModelState.IsValid)
             {
-                DishDto dishDTO = _mapper.Map<DishDto>(model);
-
+                EditDishDto dto = _mapper.Map<EditDishDto>(model);
                 try 
                 { 
-                    await _service.UpdateDishAsync(dishDTO);
+                    await _service.UpdateDishAsync(dishId, dto);
                     return Ok("Dish has been updated");
                 }
                 catch(Exception ex)
@@ -99,11 +97,11 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteDish(Guid id)
+        public async Task<IActionResult> DeleteDish(Guid dishId)
         {
             try
             {
-                await _service.DeleteDishAsync(id);
+                await _service.DeleteDishAsync(dishId);
                 return Ok("Dish has been deleted");
             }
             catch(Exception ex)

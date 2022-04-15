@@ -7,29 +7,31 @@ namespace FoodOrdering.Domain.Entities
 {
     public class Menu : BaseEntity
     {
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; private set; }
 
-        public DateTime ExpirationDate { get; set; }
+        public DateTime ExpirationDate { get; private set; }
 
-        public bool ReadyToOrder { get; set; }
+        public bool ReadyToOrder { get; private set; }
 
-        public ICollection<MenuDish> Dishes { get; set; } 
+        public ICollection<MenuDish> Dishes { get; private set; } 
         
-        public Menu()
+        public Menu() { }
+
+        public Menu(DateTime startDate, DateTime expirationDate, bool readyToOrder, List<Guid> dishesId)
         {
             Dishes = new List<MenuDish>();
+            StartDate = startDate;
+            ExpirationDate = expirationDate;
+            ReadyToOrder = readyToOrder;
+            AddDishes(dishesId);
         }
 
         public void AddDish(Guid dishId)
         {
-            Dishes.Add(new MenuDish
-            {
-                MenuId = this.Id,
-                DishId = dishId
-            });
+            Dishes.Add(new MenuDish(this.Id, dishId));
         }
 
-        public void AddDish(List<Guid> dishesId)
+        public void AddDishes(List<Guid> dishesId)
         {
             dishesId.ForEach(dishId =>
             {

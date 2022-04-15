@@ -8,6 +8,6 @@ namespace FoodOrdering.Domain.Interfaces
 
         IMenuRepository Menus { get; }
 
-        Task<int> Complete();
+        Task<int> Save();
     }
 }

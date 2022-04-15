@@ -20,57 +20,37 @@ namespace FoodOrdering.Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task CreateDishAsync(DishDto dishDTO)
+        public async Task CreateDishAsync(AddDishDto dishDTO)
         {
-            Dish dish = new()
-            {
-                Name = dishDTO.Name,
-                Ingredients = dishDTO.Ingredients,
-                Price = dishDTO.Price,
-                Nutrients = new Nutrients()
-                {
-                    Proteins = dishDTO.Proteins,
-                    Fats = dishDTO.Fats,
-                    Carbohydrates = dishDTO.Carbohydrates,
-                    Calories = dishDTO.Calories
-                },
-                Weight = dishDTO.Weight
-            };
+            Nutrients nutrients = new(dishDTO.Proteins, dishDTO.Fats, dishDTO.Carbohydrates, dishDTO.Calories);
+            Dish dish = new(dishDTO.Name, dishDTO.Ingredients, dishDTO.Price, nutrients, dishDTO.Weight);
 
             await _unitOfWork.Dishes.AddAsync(dish);
-            await _unitOfWork.Complete();
+            await _unitOfWork.Save();
         }
 
-        public async Task UpdateDishAsync(DishDto dishDTO)
+        public async Task UpdateDishAsync(Guid id, EditDishDto dto)
         {
-            if (dishDTO == null)
+            if (dto == null)
             {
                 throw new Exception("Dish not set");
             }
-            else if (!await _unitOfWork.Dishes.DishExists(dishDTO.Id))
+            else if (!await _unitOfWork.Dishes.DishExists(id))
             {
                 throw new Exception("Dish not found");
             }
 
-            Dish dish = new()
-            {
-                Name = dishDTO.Name,
-                Ingredients = dishDTO.Ingredients,
-                Price = dishDTO.Price,
-                Nutrients = new Nutrients()
-                {
-                    Proteins = dishDTO.Proteins,
-                    Fats = dishDTO.Fats,
-                    Carbohydrates = dishDTO.Carbohydrates,
-                    Calories = dishDTO.Calories
-                },
-                Weight = dishDTO.Weight
-            }; 
+
+            Nutrients nutrients = new(dto.Proteins,dto.Fats,dto.Carbohydrates,dto.Calories);
+            Dish newDish = new(dto.Name,dto.Ingredients,dto.Price,nutrients,dto.Weight);
+
+            Dish oldDish = await _unitOfWork.Dishes.GetByIdAsync(id);
             
             try
             {
-                _unitOfWork.Dishes.Update(dish);
-                await _unitOfWork.Complete();
+                _unitOfWork.Dishes.ToModifiedState(oldDish);
+                oldDish.Update(newDish);
+                await _unitOfWork.Save();
             }
             catch(Exception ex)
             {
@@ -86,7 +66,7 @@ namespace FoodOrdering.Application.Services
             {
                 var dish = await _unitOfWork.Dishes.GetByIdAsync(id);
                 _unitOfWork.Dishes.Remove(dish);
-                await _unitOfWork.Complete();
+                await _unitOfWork.Save();
             }
             else
             {
@@ -94,13 +74,13 @@ namespace FoodOrdering.Application.Services
             }
         }
 
-        public async Task<IEnumerable<GetAllDishesDto>> GetAllDishesAsync()
+        public async Task<IEnumerable<GotAllDishesDto>> GetAllDishesAsync()
         { 
             var dishes = await _unitOfWork.Dishes.GetAllAsync();
 
             if (dishes is not null)
             {
-                var dishDtoList = _mapper.Map<List<GetAllDishesDto>>(dishes);
+                var dishDtoList = _mapper.Map<List<GotAllDishesDto>>(dishes);
 
                 return dishDtoList;
             }
@@ -110,7 +90,7 @@ namespace FoodOrdering.Application.Services
             }
         }
 
-        public async Task<DishDto> GetDishAsync(Guid id)
+        public async Task<GotDishDto> GetDishAsync(Guid id)
         {
             if (id == Guid.Empty)
             {
@@ -123,7 +103,7 @@ namespace FoodOrdering.Application.Services
 
             Dish dish = await _unitOfWork.Dishes.GetByIdAsync(id);
 
-            DishDto dishDTO = _mapper.Map<DishDto>(dish);
+            GotDishDto dishDTO = _mapper.Map<GotDishDto>(dish);
 
             return dishDTO;
         }

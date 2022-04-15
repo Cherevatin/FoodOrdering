@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace FoodOrdering.Application.Dtos.Dish
+﻿namespace FoodOrdering.Application.Dtos.Dish
 {
-    public class DishDto
+    public class AddDishDto
     {
-        public Guid Id { get; set; }
-
         public string Name { get; set; }
 
         public string Ingredients { get; set; }
@@ -23,6 +19,5 @@ namespace FoodOrdering.Application.Dtos.Dish
         public double? Calories { get; set; }
 
         public double Weight { get; set; }
-
     }
 }
