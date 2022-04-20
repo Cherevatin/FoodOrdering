@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using FoodOrdering.Domain.Common;
-using FoodOrdering.Domain.Interfaces;
 
 namespace FoodOrdering.Infrastructure.Repositories
 {
@@ -28,7 +27,7 @@ namespace FoodOrdering.Infrastructure.Repositories
        
         public void Remove(T entity) => _entities.Remove(entity);
     
-        public void ToModifiedState(T entity) => _context.Entry(entity).State = EntityState.Modified;
+        public void Update(T entity) => _context.Entry(entity).State = EntityState.Modified;
 
     }
 }

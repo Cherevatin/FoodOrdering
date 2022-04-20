@@ -1,10 +1,7 @@
-﻿using FoodOrdering.Domain.Entities;
-using FoodOrdering.Domain.Interfaces;
-using FoodOrdering.Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using FoodOrdering.Domain.Aggregates.BasketAggregate;
+using FoodOrdering.Domain.Aggregates.DishAggregate;
+using FoodOrdering.Domain.Aggregates.MenuAggregate;
+using FoodOrdering.Domain.Common;
 using System.Threading.Tasks;
 
 namespace FoodOrdering.Infrastructure
@@ -17,13 +14,17 @@ namespace FoodOrdering.Infrastructure
 
         public IMenuRepository Menus { get; }
 
+        public IBasketRepository Baskets { get; }
+
         public UnitOfWork(FoodOrderingContext context, 
             IDishRepository dishRepository, 
-            IMenuRepository menuRepository)
+            IMenuRepository menuRepository,
+            IBasketRepository basketRepository)
         {
             _context = context;
             Dishes = dishRepository;
             Menus = menuRepository;
+            Baskets = basketRepository;
         }
 
         public async Task<int> Save() => await _context.SaveChangesAsync();

@@ -1,11 +1,13 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using AutoMapper;
-using FoodOrdering.Application.Interfaces;
-using FoodOrdering.Presentation.ViewModels.Menu;
 using System.Collections.Generic;
+
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+
 using FoodOrdering.Application.Dtos.Menu;
+using FoodOrdering.Presentation.ViewModels.Menu;
+using FoodOrdering.Application.Services.MenuService;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FoodOrdering.Presentation.Controllers
@@ -38,12 +40,12 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpGet("all-info/{id}")]
+        [HttpGet("all-info")]
         public async Task<IActionResult> MenuAllInfo(Guid menuId)
         {
             try
             {
-                var dto = await _service.GetMenuAllInfo(menuId);
+                var dto = await _service.GetMenuAllInfoAsync(menuId);
                 var viewModel = _mapper.Map<GotMenuViewModel>(dto);
 
                 return Ok(viewModel);
@@ -54,12 +56,12 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpGet("details/{id}")]
+        [HttpGet("details")]
         public async Task<IActionResult> MenuDetails(Guid menuId)
         {
             try
             {
-                var dto = await _service.GetMenuDetails(menuId);
+                var dto = await _service.GetMenuDetailsAsync(menuId);
                 var viewModel = _mapper.Map<GotMenuDetailsViewModel>(dto);
 
                 return Ok(viewModel);
@@ -70,12 +72,12 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpGet("dishes/{id}")]
+        [HttpGet("dishes")]
         public async Task<IActionResult> MenuDishes(Guid menuId)
         {
             try
             {
-                var dto = await _service.GetAllDishes(menuId);
+                var dto = await _service.GetAllDishesAsync(menuId);
                 var viewModel = _mapper.Map<GotDishesViewModel>(dto);
 
                 return Ok(viewModel);
@@ -93,7 +95,7 @@ namespace FoodOrdering.Presentation.Controllers
             {
                 AddMenuDto dto = _mapper.Map<AddMenuDto>(model);
 
-                await _service.CreateMenuAsync(dto);
+                await _service.AddMenuAsync(dto);
 
                 return Ok("Menu has been created");
             }
@@ -104,7 +106,7 @@ namespace FoodOrdering.Presentation.Controllers
             
         }
 
-        [HttpPut("add-dish/{id}")]
+        [HttpPut("add-dish")]
         public async Task<IActionResult> AddDish(Guid menuId, AddDishToMenuViewModel model)
         {
             if (ModelState.IsValid)
@@ -113,7 +115,7 @@ namespace FoodOrdering.Presentation.Controllers
 
                 try
                 {
-                    await _service.AddDishToMenu(menuId, dto);
+                    await _service.AddDishToMenuAsync(menuId, dto);
 
                     return Ok("Dish has been added");
                 }
@@ -128,7 +130,7 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpPut("edit/{id}")]
+        [HttpPut("edit")]
         public async Task<IActionResult> EditMenu(Guid menuId, EditMenuViewModel model)
         {
             if (ModelState.IsValid)
@@ -150,7 +152,7 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteMenu(Guid menuId)
         {
             try

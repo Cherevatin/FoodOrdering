@@ -1,12 +1,13 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using AutoMapper;
-using FoodOrdering.Presentation.ViewModels.Dish;
-using FoodOrdering.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
 using FoodOrdering.Application.Dtos.Dish;
-using System.Collections.Generic;
+using FoodOrdering.Presentation.ViewModels.Dish;
+using FoodOrdering.Application.Services.DishService;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,7 +43,7 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("get")]
         public async Task<IActionResult> GetDish(Guid dishId)
         {
             try
@@ -64,7 +65,7 @@ namespace FoodOrdering.Presentation.Controllers
             {
                 AddDishDto dto = _mapper.Map<AddDishDto>(model);
 
-                await _service.CreateDishAsync(dto);
+                await _service.AddDishAsync(dto);
 
                 return Ok("Dish has been created");
             }
@@ -74,7 +75,7 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpPut("edit/{id}")]
+        [HttpPut("edit")]
         public async Task<IActionResult> EditDish(Guid dishId, EditDishViewModel model)
         {
             if (ModelState.IsValid)
@@ -96,7 +97,7 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteDish(Guid dishId)
         {
             try

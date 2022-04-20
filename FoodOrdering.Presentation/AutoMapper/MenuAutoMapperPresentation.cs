@@ -1,13 +1,7 @@
 ﻿using AutoMapper;
-using FoodOrdering.Application.Dtos.Dish;
+
 using FoodOrdering.Application.Dtos.Menu;
-using FoodOrdering.Presentation.ViewModels.Dish;
 using FoodOrdering.Presentation.ViewModels.Menu;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodOrdering.Presentation
 {

@@ -5,14 +5,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-
-using FoodOrdering.Application.Services;
-using FoodOrdering.Application.Interfaces;
-using FoodOrdering.Domain.Interfaces;
 using FoodOrdering.Infrastructure;
 using FoodOrdering.Infrastructure.Repositories;
 using FoodOrdering.Application.AutoMapper;
 using FoodOrdering.Presentation.AutoMapper;
+using FoodOrdering.Application.Services.MenuService;
+using FoodOrdering.Application.Services.DishService;
+using FoodOrdering.Application.Services.BasketService;
+using FoodOrdering.Domain.Aggregates.MenuAggregate;
+using FoodOrdering.Domain.Common;
+using FoodOrdering.Domain.Aggregates.DishAggregate;
+using FoodOrdering.Domain.Aggregates.BasketAggregate;
 
 namespace FoodOrdering.Presentation
 {
@@ -32,7 +35,9 @@ namespace FoodOrdering.Presentation
                 typeof(DishAutoMapperPresentation),
                 typeof(DishAutoMapperApplication),
                 typeof(MenuAutoMapperPresentation), 
-                typeof(MenuAutoMapperApplication)
+                typeof(MenuAutoMapperApplication),
+                typeof(BasketAutoMapperPresentation),
+                typeof(BasketAutoMapperApplication)
                 );
 
 
@@ -45,9 +50,11 @@ namespace FoodOrdering.Presentation
 
             services.AddTransient<IDishRepository, DishRepository>();
             services.AddTransient<IMenuRepository, MenuRepository>();
+            services.AddTransient<IBasketRepository, BasketRepository>();
 
             services.AddTransient<IDishService, DishService>();
             services.AddTransient<IMenuService, MenuService>();
+            services.AddTransient<IBasketService, BasketService>();
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 

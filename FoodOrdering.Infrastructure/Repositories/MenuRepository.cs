@@ -2,17 +2,14 @@
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
-
-using FoodOrdering.Domain.Entities;
-using FoodOrdering.Domain.Interfaces;
 using System.Collections.Generic;
+using FoodOrdering.Domain.Aggregates.MenuAggregate;
 
 namespace FoodOrdering.Infrastructure.Repositories
 {
     public class MenuRepository : GenericRepository<Menu>, IMenuRepository
     {
-        public MenuRepository(FoodOrderingContext context)
-            : base(context)
+        public MenuRepository(FoodOrderingContext context) : base(context)
         {
 
         }
@@ -24,7 +21,7 @@ namespace FoodOrdering.Infrastructure.Repositories
 
         public async Task<Menu> GetMenuWithDishesById(Guid id)
         {
-            return await _entities.Include(m => m.Dishes).FirstOrDefaultAsync(m => m.Id == id);
+            return await _entities.Include(m => m.MenuItems).FirstOrDefaultAsync(m => m.Id == id);
         }
     }
 }

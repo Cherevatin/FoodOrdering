@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FoodOrdering.Application.Dtos.Dish;
-using FoodOrdering.Domain.Entities;
+using FoodOrdering.Domain.Aggregates.DishAggregate;
 
 namespace FoodOrdering.Application.AutoMapper
 {
