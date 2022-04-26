@@ -32,7 +32,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                var dto = await _service.GetAllDishesAsync();
+                var dto = await _service.GetAll();
                 var viewModel = _mapper.Map<List<GotAllDishesViewModel>>(dto);
 
                 return Ok(viewModel);
@@ -48,7 +48,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                var dto = await _service.GetDishAsync(dishId);
+                var dto = await _service.Get(dishId);
                 var viewModel = _mapper.Map<GotDishViewModel>(dto);
                 return Ok(viewModel);
             }
@@ -65,7 +65,7 @@ namespace FoodOrdering.Presentation.Controllers
             {
                 AddDishDto dto = _mapper.Map<AddDishDto>(model);
 
-                await _service.AddDishAsync(dto);
+                await _service.Add(dto);
 
                 return Ok("Dish has been created");
             }
@@ -83,7 +83,7 @@ namespace FoodOrdering.Presentation.Controllers
                 EditDishDto dto = _mapper.Map<EditDishDto>(model);
                 try 
                 { 
-                    await _service.UpdateDishAsync(dishId, dto);
+                    await _service.Update(dishId, dto);
                     return Ok("Dish has been updated");
                 }
                 catch(Exception ex)
@@ -102,7 +102,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                await _service.DeleteDishAsync(dishId);
+                await _service.Delete(dishId);
                 return Ok("Dish has been deleted");
             }
             catch(Exception ex)

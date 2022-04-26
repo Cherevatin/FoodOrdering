@@ -19,7 +19,7 @@ namespace FoodOrdering.Application.Services.MenuService
             _mapper = mapper;
 
         }
-        public async Task<IEnumerable<GotAllMenusDto>> GetAllMenusAsync()
+        public async Task<IEnumerable<GotAllMenusDto>> GetAll()
         {
             var menus = await _unitOfWork.Menus.GetAllAsync();
 
@@ -35,13 +35,13 @@ namespace FoodOrdering.Application.Services.MenuService
             }
         }
 
-        public async Task<GotMenuDetailsDto> GetMenuDetailsAsync(Guid id)
+        public async Task<GotMenuDetailsDto> GetMenuDetails(Guid id)
         {
             if (id == Guid.Empty)
             {
                 throw new Exception("Menu ID not set");
             }
-            else if (!await _unitOfWork.Menus.MenuExists(id))
+            else if (!await _unitOfWork.Menus.IsExist(id))
             {
                 throw new Exception("Menu does not exist");
             }
@@ -53,13 +53,13 @@ namespace FoodOrdering.Application.Services.MenuService
             return dto;
         }
 
-        public async Task<GotDishesDto> GetAllDishesAsync(Guid id)
+        public async Task<GotDishesDto> GetAllDishes(Guid id)
         {
             if (id == Guid.Empty)
             {
                 throw new Exception("Menu ID not set");
             }
-            else if (!await _unitOfWork.Menus.MenuExists(id))
+            else if (!await _unitOfWork.Menus.IsExist(id))
             {
                 throw new Exception("Menu does not exist");
             }
@@ -77,7 +77,7 @@ namespace FoodOrdering.Application.Services.MenuService
             return menuDishesDto;
         }
 
-        public async Task AddMenuAsync(AddMenuDto menuDTO)
+        public async Task Add(AddMenuDto menuDTO)
         {
             Menu menu = new(menuDTO.StartDate, menuDTO.ExpirationDate, menuDTO.ReadyToOrder, menuDTO.Dishes);
 
@@ -85,9 +85,9 @@ namespace FoodOrdering.Application.Services.MenuService
             await _unitOfWork.Save();
         }
 
-        public async Task AddDishToMenuAsync(Guid menuId, AddDishToMenuDto dto)
+        public async Task AddDish(Guid menuId, AddDishToMenuDto dto)
         {
-            bool menuExists = await _unitOfWork.Menus.MenuExists(menuId);
+            bool menuExists = await _unitOfWork.Menus.IsExist(menuId);
 
             if (menuExists)
             {
@@ -103,13 +103,13 @@ namespace FoodOrdering.Application.Services.MenuService
             }
         }
 
-        public async Task UpdateMenuAsync(Guid menuId, EditMenuDto dto)
+        public async Task Update(Guid menuId, EditMenuDto dto)
         {
             if (dto == null)
             {
                 throw new Exception("Menu not set");
             }
-            else if (!await _unitOfWork.Menus.MenuExists(menuId))
+            else if (!await _unitOfWork.Menus.IsExist(menuId))
             {
                 throw new Exception("Menu not found");
             }
@@ -126,9 +126,9 @@ namespace FoodOrdering.Application.Services.MenuService
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteMenuAsync(Guid id)
+        public async Task Delete(Guid id)
         {
-            if (await _unitOfWork.Menus.MenuExists(id))
+            if (await _unitOfWork.Menus.IsExist(id))
             {
                 var entity = await _unitOfWork.Menus.GetByIdAsync(id);
                 _unitOfWork.Menus.Remove(entity);
@@ -140,9 +140,9 @@ namespace FoodOrdering.Application.Services.MenuService
             }
         }
 
-        public async Task<GotMenuDto> GetMenuAllInfoAsync(Guid menuId)
+        public async Task<GotMenuDto> GetMenuAllInfo(Guid menuId)
         {
-            if (!await _unitOfWork.Menus.MenuExists(menuId))
+            if (!await _unitOfWork.Menus.IsExist(menuId))
             {
                 throw new Exception("Menu not found");
             }

@@ -30,7 +30,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                var dto = await _service.GetAllMenusAsync();
+                var dto = await _service.GetAll();
                 var viewModel = _mapper.Map<List<GotAllMenusViewModel>>(dto);
                 return Ok(viewModel);
             }
@@ -45,7 +45,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                var dto = await _service.GetMenuAllInfoAsync(menuId);
+                var dto = await _service.GetMenuAllInfo(menuId);
                 var viewModel = _mapper.Map<GotMenuViewModel>(dto);
 
                 return Ok(viewModel);
@@ -61,7 +61,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                var dto = await _service.GetMenuDetailsAsync(menuId);
+                var dto = await _service.GetMenuDetails(menuId);
                 var viewModel = _mapper.Map<GotMenuDetailsViewModel>(dto);
 
                 return Ok(viewModel);
@@ -77,7 +77,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                var dto = await _service.GetAllDishesAsync(menuId);
+                var dto = await _service.GetAllDishes(menuId);
                 var viewModel = _mapper.Map<GotDishesViewModel>(dto);
 
                 return Ok(viewModel);
@@ -95,7 +95,7 @@ namespace FoodOrdering.Presentation.Controllers
             {
                 AddMenuDto dto = _mapper.Map<AddMenuDto>(model);
 
-                await _service.AddMenuAsync(dto);
+                await _service.Add(dto);
 
                 return Ok("Menu has been created");
             }
@@ -115,7 +115,7 @@ namespace FoodOrdering.Presentation.Controllers
 
                 try
                 {
-                    await _service.AddDishToMenuAsync(menuId, dto);
+                    await _service.AddDish(menuId, dto);
 
                     return Ok("Dish has been added");
                 }
@@ -138,7 +138,7 @@ namespace FoodOrdering.Presentation.Controllers
                 EditMenuDto dto = _mapper.Map<EditMenuDto>(model);
                 try
                 {
-                    await _service.UpdateMenuAsync(menuId, dto);
+                    await _service.Update(menuId, dto);
                     return Ok("Menu has been updated");
                 }
                 catch(Exception ex)
@@ -157,7 +157,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                await _service.DeleteMenuAsync(menuId);
+                await _service.Delete(menuId);
                 return Ok("Menu has been deleted");
             }
             catch(Exception ex)

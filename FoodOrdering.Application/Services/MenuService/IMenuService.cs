@@ -7,20 +7,20 @@ namespace FoodOrdering.Application.Services.MenuService
 {
     public interface IMenuService
     {
-        Task<IEnumerable<GotAllMenusDto>> GetAllMenusAsync();
+        Task<IEnumerable<GotAllMenusDto>> GetAll();
 
-        Task<GotMenuDetailsDto> GetMenuDetailsAsync(Guid id);
+        Task<GotMenuDetailsDto> GetMenuDetails(Guid id);
 
-        Task<GotMenuDto> GetMenuAllInfoAsync(Guid id);
+        Task<GotMenuDto> GetMenuAllInfo(Guid id);
 
-        Task<GotDishesDto> GetAllDishesAsync(Guid id);
+        Task<GotDishesDto> GetAllDishes(Guid id);
 
-        Task AddMenuAsync(AddMenuDto dto);
+        Task Add(AddMenuDto dto);
 
-        Task UpdateMenuAsync(Guid id, EditMenuDto dto);
+        Task AddDish(Guid id, AddDishToMenuDto dto);
 
-        Task AddDishToMenuAsync(Guid id, AddDishToMenuDto dto);
+        Task Update(Guid id, EditMenuDto dto);
 
-        Task DeleteMenuAsync(Guid id);
+        Task Delete(Guid id);
     }
 }

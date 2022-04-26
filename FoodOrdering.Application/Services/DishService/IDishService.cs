@@ -7,15 +7,15 @@ namespace FoodOrdering.Application.Services.DishService
 {
     public interface IDishService
     {
-        Task<IEnumerable<GotAllDishesDto>> GetAllDishesAsync();
+        Task<IEnumerable<GotAllDishesDto>> GetAll();
 
-        Task<GotDishDto> GetDishAsync(Guid id);
+        Task<GotDishDto> Get(Guid id);
 
-        Task AddDishAsync(AddDishDto dto);
+        Task Add(AddDishDto dto);
 
-        Task UpdateDishAsync(Guid id, EditDishDto dto);
+        Task Update(Guid id, EditDishDto dto);
 
-        Task DeleteDishAsync(Guid id);
+        Task Delete(Guid id);
 
 
     }

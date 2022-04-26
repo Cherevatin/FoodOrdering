@@ -11,7 +11,7 @@ namespace FoodOrdering.Infrastructure.Repositories
         {
 
         }
-        public async Task<bool> DishExists(Guid id)
+        public async Task<bool> IsExist(Guid id)
         {
             return await _entities.AnyAsync(e => e.Id == id);
         }

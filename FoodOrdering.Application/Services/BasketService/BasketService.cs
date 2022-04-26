@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FoodOrdering.Application.Dtos.Basket;
 using FoodOrdering.Domain.Aggregates.BasketAggregate;
+using FoodOrdering.Domain.Aggregates.DishAggregate;
+using FoodOrdering.Domain.Aggregates.MenuAggregate;
 using FoodOrdering.Domain.Common;
 using System;
 using System.Collections.Generic;
@@ -22,7 +24,7 @@ namespace FoodOrdering.Application.Services.BasketService
             _mapper = mapper;
         }
 
-        public async Task<GotBasketDto> GetBasket(Guid basketId)
+        public async Task<GotBasketDto> Get(Guid basketId)
         {
             if (basketId == Guid.Empty)
             {
@@ -35,12 +37,39 @@ namespace FoodOrdering.Application.Services.BasketService
 
             Basket basket = await _unitOfWork.Baskets.GetBasketById(basketId);
 
-            GotBasketDto dto = _mapper.Map<GotBasketDto>(basket);
+            GotBasketDto dto = new();
+            dto.CustomerId = basket.CustomerId;
 
+            var grouppedByMenuDictionary = basket.BasketItems
+                .GroupBy(p => p.MenuId)
+                .ToDictionary(p => p.Key, p => p.ToList());
+
+            
+            foreach(var group in grouppedByMenuDictionary)
+            {
+                
+                Menu menu = await _unitOfWork.Menus.GetByIdAsync(group.Key);
+                BasketMenuDto basketMenu = new()
+                {
+                    StartDate = menu.StartDate,
+                    ExpirationDate = menu.ExpirationDate
+                };
+                foreach (var basketItem in group.Value)
+                {
+                    Dish dish = await _unitOfWork.Dishes.GetByIdAsync(basketItem.DishId);
+                    BasketDishDto basketDishDto = new()
+                    {
+                        DishId = dish.Id,
+                        DishTitle = dish.Name
+                    };
+                    basketMenu.Dishes.Add(basketDishDto);
+                }
+                dto.Items.Add(group.Key, basketMenu);
+            }
             return dto;
         }
 
-        public async Task AddDishAsync(AddDishDto dto)
+        public async Task AddDish(AddDishDto dto)
         {
             if (dto is null)
             {
@@ -89,7 +118,7 @@ namespace FoodOrdering.Application.Services.BasketService
             await _unitOfWork.Save();
         }
 
-        public async Task CreateBasketAsync(CreateBasketDto dto)
+        public async Task Create(CreateBasketDto dto)
         {
             if (dto is null)
             {
@@ -106,7 +135,7 @@ namespace FoodOrdering.Application.Services.BasketService
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteDishAsync(Guid basketId, Guid dishId)
+        public async Task DeleteDish(Guid basketId, Guid dishId)
         {
             if (dishId == Guid.Empty || basketId == Guid.Empty) 
             {
@@ -127,7 +156,30 @@ namespace FoodOrdering.Application.Services.BasketService
             
         }
 
-        public async Task DeleteBasket(Guid basketId)
+        public async Task Clear(Guid basketId)
+        {
+            if (basketId == Guid.Empty)
+            {
+                throw new Exception("Id is empty");
+            }
+
+            bool basketExists = await _unitOfWork.Baskets.BasketExists(basketId);
+
+            if (basketExists)
+            {
+                Basket basket = await _unitOfWork.Baskets.GetBasketById(basketId);
+                basket.ClearItems();
+                _unitOfWork.Baskets.Update(basket);
+                await _unitOfWork.Save();
+            }
+            else
+            {
+                throw new Exception("Basket doesn't exist");
+            }
+
+        }
+
+        public async Task Delete(Guid basketId)
         {
             if (basketId == Guid.Empty)
             {
@@ -147,11 +199,6 @@ namespace FoodOrdering.Application.Services.BasketService
             {
                 throw new Exception("Basket doesn't exist");
             }
-        }
-
-        public Task<IEnumerable<Basket>> GetAll()
-        {
-            throw new NotImplementedException();
         }
     }
 }

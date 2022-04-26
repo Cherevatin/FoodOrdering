@@ -1,6 +1,7 @@
 ﻿using FoodOrdering.Domain.Aggregates.BasketAggregate;
 using FoodOrdering.Domain.Aggregates.DishAggregate;
 using FoodOrdering.Domain.Aggregates.MenuAggregate;
+using FoodOrdering.Domain.Aggregates.OrderAggregate;
 using FoodOrdering.Domain.Common;
 using System.Threading.Tasks;
 
@@ -16,15 +17,19 @@ namespace FoodOrdering.Infrastructure
 
         public IBasketRepository Baskets { get; }
 
+        public IOrderRepository Orders { get; }
+
         public UnitOfWork(FoodOrderingContext context, 
             IDishRepository dishRepository, 
             IMenuRepository menuRepository,
-            IBasketRepository basketRepository)
+            IBasketRepository basketRepository,
+            IOrderRepository orderRepository)
         {
             _context = context;
             Dishes = dishRepository;
             Menus = menuRepository;
             Baskets = basketRepository;
+            Orders = orderRepository;
         }
 
         public async Task<int> Save() => await _context.SaveChangesAsync();

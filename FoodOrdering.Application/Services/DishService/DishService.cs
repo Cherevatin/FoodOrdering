@@ -19,7 +19,7 @@ namespace FoodOrdering.Application.Services.DishService
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task AddDishAsync(AddDishDto dishDTO)
+        public async Task Add(AddDishDto dishDTO)
         {
             Nutrients nutrients = new(dishDTO.Proteins, dishDTO.Fats, dishDTO.Carbohydrates, dishDTO.Calories);
             Dish dish = new(dishDTO.Name, dishDTO.Ingredients, dishDTO.Price, nutrients, dishDTO.Weight);
@@ -28,13 +28,13 @@ namespace FoodOrdering.Application.Services.DishService
             await _unitOfWork.Save();
         }
 
-        public async Task UpdateDishAsync(Guid id, EditDishDto dto)
+        public async Task Update(Guid id, EditDishDto dto)
         {
             if (dto == null)
             {
                 throw new Exception("Dish not set");
             }
-            else if (!await _unitOfWork.Dishes.DishExists(id))
+            else if (!await _unitOfWork.Dishes.IsExist(id))
             {
                 throw new Exception("Dish not found");
             }
@@ -57,9 +57,9 @@ namespace FoodOrdering.Application.Services.DishService
             }
         }
 
-        public async Task DeleteDishAsync(Guid id)
+        public async Task Delete(Guid id)
         {
-            bool exist = await _unitOfWork.Dishes.DishExists(id);
+            bool exist = await _unitOfWork.Dishes.IsExist(id);
 
             if (exist)
             {
@@ -73,7 +73,7 @@ namespace FoodOrdering.Application.Services.DishService
             }
         }
 
-        public async Task<IEnumerable<GotAllDishesDto>> GetAllDishesAsync()
+        public async Task<IEnumerable<GotAllDishesDto>> GetAll()
         {
             var dishes = await _unitOfWork.Dishes.GetAllAsync();
 
@@ -89,14 +89,14 @@ namespace FoodOrdering.Application.Services.DishService
             }
         }
 
-        public async Task<GotDishDto> GetDishAsync(Guid id)
+        public async Task<GotDishDto> Get(Guid id)
         {
 
             if (id == Guid.Empty)
             {
                 throw new Exception("Dish ID not set");
             }
-            else if (!await _unitOfWork.Dishes.DishExists(id))
+            else if (!await _unitOfWork.Dishes.IsExist(id))
             {
                 throw new Exception("Dish not found");
             }

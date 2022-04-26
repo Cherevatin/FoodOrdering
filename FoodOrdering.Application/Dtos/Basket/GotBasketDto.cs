@@ -10,6 +10,11 @@ namespace FoodOrdering.Application.Dtos.Basket
     {
         public Guid CustomerId { get; set; }
 
-        public List<Guid> Items { get; set; }
+        public DateTime StartDate { get; private set; }
+
+        public DateTime ExpirationDate { get; private set; }
+
+        public Dictionary<Guid, BasketMenuDto> Items { get; set; } = new();
+
     }
 }

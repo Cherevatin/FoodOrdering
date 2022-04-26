@@ -13,13 +13,12 @@ namespace FoodOrdering.Domain.Aggregates.MenuAggregate
 
         public bool ReadyToOrder { get; private set; }
 
-        public ICollection<MenuItem> MenuItems { get; private set; }
+        public ICollection<MenuItem> MenuItems { get; private set; } = new List<MenuItem>();
 
         public Menu() { }
 
         public Menu(DateTime startDate, DateTime expirationDate, bool readyToOrder, List<Guid> dishesId)
         {
-            MenuItems = new List<MenuItem>();
             StartDate = startDate;
             ExpirationDate = expirationDate;
             ReadyToOrder = readyToOrder;

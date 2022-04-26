@@ -6,7 +6,7 @@ namespace FoodOrdering.Domain.Aggregates.MenuAggregate
 {
     public interface IMenuRepository : IGenericRepository<Menu>
     {
-        Task<bool> MenuExists(Guid id);
+        Task<bool> IsExist(Guid id);
 
         Task<Menu> GetMenuWithDishesById(Guid id);
     }

@@ -35,7 +35,6 @@ namespace FoodOrdering.Domain.Aggregates.BasketAggregate
                 BasketItems.Remove(item);
             }
         }
-
         public BasketItem GetItem(Guid itemId)
         {
             return BasketItems.FirstOrDefault(p => p.Id == itemId);
@@ -46,5 +45,13 @@ namespace FoodOrdering.Domain.Aggregates.BasketAggregate
             DeleteItem(item.Id);
             BasketItems.Add(item);
         }
+
+        public void ClearItems()
+        {
+            BasketItems.Clear();
+        }
+
+        public bool IsNotEmpty() => BasketItems.Any();
+        
     }
 }

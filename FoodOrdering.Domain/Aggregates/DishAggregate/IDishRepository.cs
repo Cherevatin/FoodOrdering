@@ -6,6 +6,6 @@ namespace FoodOrdering.Domain.Aggregates.DishAggregate
 {
     public interface IDishRepository : IGenericRepository<Dish>
     {
-        Task<bool> DishExists(Guid id);
+        Task<bool> IsExist(Guid id);
     }
 }

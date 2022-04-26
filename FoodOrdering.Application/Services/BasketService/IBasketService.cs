@@ -8,19 +8,19 @@ namespace FoodOrdering.Application.Services.BasketService
 {
     public interface IBasketService
     {
-        Task<GotBasketDto> GetBasket(Guid basketId);
+        Task<GotBasketDto> Get(Guid basketId);
 
-        Task<IEnumerable<Basket>> GetAll();
+        Task Create(CreateBasketDto dto);
 
-        Task CreateBasketAsync(CreateBasketDto dto);
-
-        Task AddDishAsync(AddDishDto dto);
+        Task AddDish(AddDishDto dto);
 
         Task UpdateNumberOfServings(Guid basketId, UpdateBasketItemDto dto);
 
-        Task DeleteDishAsync(Guid basketId, Guid dishId);
-        
-        Task DeleteBasket(Guid basketId);
+        Task Clear(Guid basketId);
+
+        Task DeleteDish(Guid basketId, Guid dishId);
+
+        Task Delete(Guid basketId);
 
     }
 }

@@ -5,6 +5,7 @@ using FoodOrdering.Application.Services.BasketService;
 using AutoMapper;
 using FoodOrdering.Presentation.ViewModels.Basket;
 using FoodOrdering.Application.Dtos.Basket;
+using FoodOrdering.Presentation.ViewModels.Basket.GotBasketViewModels;
 
 namespace FoodOrdering.Presentation.Controllers
 {
@@ -27,7 +28,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                GotBasketDto dto = await _service.GetBasket(basketId);
+                GotBasketDto dto = await _service.Get(basketId);
                 GotBasketViewModel viewModel = _mapper.Map<GotBasketViewModel>(dto);
                 return Ok(viewModel);
             }
@@ -46,7 +47,7 @@ namespace FoodOrdering.Presentation.Controllers
                 {
                     CreateBasketDto dto = _mapper.Map<CreateBasketDto>(model);
 
-                    await _service.CreateBasketAsync(dto);
+                    await _service.Create(dto);
 
                     return Ok("Basket has been added");
                 }
@@ -86,7 +87,7 @@ namespace FoodOrdering.Presentation.Controllers
             {
                 AddDishDto dto = _mapper.Map<AddDishDto>(model);
 
-                await _service.AddDishAsync(dto);
+                await _service.AddDish(dto);
 
                 return Ok("Dish has been added to basket");
             }
@@ -101,8 +102,22 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                await _service.DeleteDishAsync(basketId, dishId);
+                await _service.DeleteDish(basketId, dishId);
                 return Ok("Dish has been deleted from basket");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("clear")]
+        public async Task<IActionResult> ClearBasket(Guid basketId)
+        {
+            try
+            {
+                await _service.Clear(basketId);
+                return Ok("Basket has been cleared");
             }
             catch (Exception ex)
             {
@@ -115,7 +130,7 @@ namespace FoodOrdering.Presentation.Controllers
         {
             try
             {
-                await _service.DeleteBasket(basketId);
+                await _service.Delete(basketId);
                 return Ok("Basket has been deleted");
             }
             catch(Exception ex)

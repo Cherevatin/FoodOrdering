@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodOrdering.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodOrderingContext))]
-    [Migration("20220420170011_test")]
-    partial class test
+    [Migration("20220422193441_AddOrderEntity")]
+    partial class AddOrderEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,6 +80,29 @@ namespace FoodOrdering.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Menus");
+                });
+
+            modelBuilder.Entity("FoodOrdering.Domain.Aggregates.OrderAggregate.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ExecutionDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("FoodOrdering.Domain.Aggregates.BasketAggregate.Basket", b =>
@@ -194,6 +217,51 @@ namespace FoodOrdering.Infrastructure.Migrations
                         });
 
                     b.Navigation("MenuItems");
+                });
+
+            modelBuilder.Entity("FoodOrdering.Domain.Aggregates.OrderAggregate.Order", b =>
+                {
+                    b.OwnsMany("FoodOrdering.Domain.Aggregates.OrderAggregate.OrderItem", "OrderItems", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("DishId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<double>("DishPrice")
+                                .HasColumnType("double precision");
+
+                            b1.Property<string>("DishTitle")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Units")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("DishId");
+
+                            b1.HasIndex("OrderId");
+
+                            b1.ToTable("OrdersItems");
+
+                            b1.HasOne("FoodOrdering.Domain.Aggregates.DishAggregate.Dish", null)
+                                .WithMany()
+                                .HasForeignKey("DishId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

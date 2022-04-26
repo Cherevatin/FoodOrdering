@@ -3,6 +3,7 @@ using FoodOrdering.Infrastructure.EntityConfigurations;
 using FoodOrdering.Domain.Aggregates.DishAggregate;
 using FoodOrdering.Domain.Aggregates.MenuAggregate;
 using FoodOrdering.Domain.Aggregates.BasketAggregate;
+using FoodOrdering.Domain.Aggregates.OrderAggregate;
 
 namespace FoodOrdering.Infrastructure
 {
@@ -13,6 +14,8 @@ namespace FoodOrdering.Infrastructure
         public DbSet<Menu> Menus { get; set; }
 
         public DbSet<Basket> Baskets { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
 
         public FoodOrderingContext(DbContextOptions options)
             : base(options)
@@ -25,6 +28,7 @@ namespace FoodOrdering.Infrastructure
             modelBuilder.ApplyConfiguration(new MenuEntityConfiguration());
             modelBuilder.ApplyConfiguration(new DishEntityConfiguration());
             modelBuilder.ApplyConfiguration(new BasketEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderEntityConfiguration());
         }
     }
 }
