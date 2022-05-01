@@ -24,6 +24,7 @@ namespace FoodOrdering.Infrastructure.EntityConfigurations
                 menuItemsBuilder.HasIndex(p => p.MenuId);
                 menuItemsBuilder.HasIndex(p => p.DishId);
 
+                menuItemsBuilder.Property(p => p.Id).ValueGeneratedNever();
                 menuItemsBuilder.Property<Guid>("MenuId").IsRequired();
                 menuItemsBuilder.Property<Guid>("DishId").IsRequired();
 

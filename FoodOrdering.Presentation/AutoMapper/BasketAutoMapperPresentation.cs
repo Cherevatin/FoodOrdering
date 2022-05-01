@@ -2,7 +2,6 @@
 
 using FoodOrdering.Application.Dtos.Basket;
 using FoodOrdering.Presentation.ViewModels.Basket;
-using FoodOrdering.Presentation.ViewModels.Basket.GotBasketViewModels;
 
 namespace FoodOrdering.Presentation.AutoMapper
 {
@@ -14,9 +13,9 @@ namespace FoodOrdering.Presentation.AutoMapper
             CreateMap<AddDishToBasketViewModel, AddDishDto>();
             CreateMap<UpdateBasketItemViewModel, UpdateBasketItemDto>();
 
-            CreateMap<GotBasketDto, GotBasketViewModel>();
-            CreateMap<BasketDishDto, BasketDishViewModel>();
-            CreateMap<BasketMenuDto, BasketMenuViewModel>();
+            CreateMap<GetBasketDto, GetBasketViewModel>();
+            CreateMap<GetBasketDto.Dish, GetBasketViewModel.Dish>();
+            CreateMap<GetBasketDto.Menu, GetBasketViewModel.Menu>();
         }
     }
 }

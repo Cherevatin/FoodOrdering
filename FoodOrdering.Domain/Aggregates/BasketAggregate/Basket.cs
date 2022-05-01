@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using FoodOrdering.Domain.Common;
+using FoodOrdering.Domain.Exception;
 
 namespace FoodOrdering.Domain.Aggregates.BasketAggregate
 {
     public class Basket : BaseEntity
     {
+        private List<BasketItem> _basketItems = new();
+
         public Guid CustomerId { get; private set; }
 
-        public ICollection<BasketItem> BasketItems { get; private set; } = new List<BasketItem>();
+        public IReadOnlyList<BasketItem> BasketItems => _basketItems;
 
         public Basket()
         {
-            Id = Guid.NewGuid();
             CustomerId = Guid.NewGuid();
         }
 
@@ -24,34 +27,34 @@ namespace FoodOrdering.Domain.Aggregates.BasketAggregate
 
         public void AddItem(Guid dishId, Guid menuId)
         {
-            BasketItems.Add(new BasketItem(dishId, menuId, Id));
+            _basketItems.Add(new BasketItem(dishId, menuId, Id));
         }
 
         public void DeleteItem(Guid itemId)
         {
-            var item = BasketItems.FirstOrDefault(p => p.DishId == itemId);
-            if (item is not null)
+            var item = _basketItems.FirstOrDefault(p => p.DishId == itemId);
+            if (item == null)
             {
-                BasketItems.Remove(item);
+                throw new DomainNotFoundException("Item not found");
             }
-        }
-        public BasketItem GetItem(Guid itemId)
-        {
-            return BasketItems.FirstOrDefault(p => p.Id == itemId);
+            _basketItems.Remove(item);
         }
 
-        public void UpdateItem(BasketItem item)
+        public void UpdateItem(Guid itemId, int numberOfServings)
         {
-            DeleteItem(item.Id);
-            BasketItems.Add(item);
+            var item = _basketItems.FirstOrDefault(item => item.Id == itemId);
+            item.UpdateNumberOfServings(numberOfServings);
         }
 
         public void ClearItems()
         {
-            BasketItems.Clear();
+            _basketItems.Clear();
         }
 
-        public bool IsNotEmpty() => BasketItems.Any();
+        public bool IsEmpty()
+        {
+            return !_basketItems.Any();
+        }
         
     }
 }

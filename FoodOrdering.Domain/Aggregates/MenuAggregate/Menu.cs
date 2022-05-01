@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Domain.Aggregates.MenuAggregate
 {
-    public class Menu : BaseEntity
+    public class Menu : BaseEntity, IAggregateRoot
     {
+        private readonly List<MenuItem> _menuItems = new();
+        
         public DateTime StartDate { get; private set; }
 
         public DateTime ExpirationDate { get; private set; }
 
         public bool ReadyToOrder { get; private set; }
 
-        public ICollection<MenuItem> MenuItems { get; private set; } = new List<MenuItem>();
+        public IReadOnlyList<MenuItem> MenuItems => _menuItems;
 
         public Menu() { }
 
@@ -27,7 +29,7 @@ namespace FoodOrdering.Domain.Aggregates.MenuAggregate
 
         public void AddDish(Guid dishId)
         {
-            MenuItems.Add(new MenuItem(Id, dishId));
+            _menuItems.Add(new MenuItem(Id, dishId));
         }
 
         public void AddDishes(List<Guid> dishesId)
@@ -38,16 +40,20 @@ namespace FoodOrdering.Domain.Aggregates.MenuAggregate
             });
         }
 
-        public void Update(Menu newMenu)
+        public Menu UpdateDetails(DateTime startDate, DateTime expirationDate, bool readyToOrder)
         {
-            StartDate = newMenu.StartDate;
-            ExpirationDate = newMenu.ExpirationDate;
-            ReadyToOrder = newMenu.ReadyToOrder;
-
-            MenuItems.Clear();
-            MenuItems = newMenu.MenuItems;
+            StartDate = startDate;
+            ExpirationDate = expirationDate;
+            ReadyToOrder = readyToOrder;
+            return this;
         }
 
+        public Menu UpdateDishes(List<Guid> dishesId)
+        {
+            _menuItems.Clear();
+            AddDishes(dishesId);
+            return this;
+        }
     }
 }
 

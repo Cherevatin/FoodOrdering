@@ -1,13 +1,11 @@
 ﻿using System;
-using FoodOrdering.Domain.Aggregates.DishAggregate;
-using FoodOrdering.Domain.Aggregates.MenuAggregate;
+
 using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Domain.Aggregates.BasketAggregate
 {
     public class BasketItem : BaseEntity
     {
-
         public Guid DishId { get; private set; }
 
         public Guid MenuId { get; private set; }

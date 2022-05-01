@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using FoodOrdering.Domain.Common;
+﻿using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Domain.Aggregates.DishAggregate
 {
-    public class Dish : BaseEntity
+    public class Dish : BaseEntity, IAggregateRoot
     {
         public string Name { get; private set; }
 
@@ -15,26 +14,58 @@ namespace FoodOrdering.Domain.Aggregates.DishAggregate
 
         public Nutrients Nutrients { get; private set; }
 
-        public double Weight { get; private set; }
+        public Weight Weight { get; private set; }
 
         public Dish() { }
 
-        public Dish(string name, string ingredients, double price, Nutrients nutrients, double weight)
+        public Dish(string name, 
+            string ingredients, 
+            double price, 
+            double proteins, 
+            double fats, 
+            double carbohydrates, 
+            double calories,
+            double weightValue,
+            int weightMeasurementUnit)
         {
             Name = name;
             Ingredients = ingredients;
             Price = price;
-            Nutrients = new Nutrients(nutrients);
-            Weight = weight;
+            Nutrients = new Nutrients(proteins, fats, carbohydrates, calories);
+            Weight = new Weight(weightValue, weightMeasurementUnit);
         }
 
-        public void Update(Dish dish)
+        public Dish UpdateName(string name)
         {
-            Name = dish.Name;
-            Ingredients = dish.Ingredients;
-            Price = dish.Price;
-            Nutrients = dish.Nutrients;
-            Weight = dish.Weight;
+            Name = name;
+            return this;
+        }
+
+        public Dish UpdatePrice(double price)
+        {
+            Price = price;
+            return this;
+        }
+
+        public Dish UpdateIngredients(string ingredients)
+        {
+            Ingredients = ingredients;
+            return this;
+        }
+
+        public Dish UpdateNutrients(double proteins, 
+            double fats, 
+            double carbohydrates, 
+            double calories)
+        {
+            Nutrients = new Nutrients(proteins, fats, carbohydrates, calories);
+            return this;
+        }
+
+        public Dish UpdateWeight(double weightValue, int weightMeasurementUnit)
+        {
+            Weight = new Weight(weightValue, weightMeasurementUnit);
+            return this;
         }
 
     }

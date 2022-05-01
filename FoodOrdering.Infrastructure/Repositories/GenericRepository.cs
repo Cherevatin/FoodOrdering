@@ -8,7 +8,7 @@ using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Infrastructure.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly FoodOrderingContext _context;
         protected readonly DbSet<T> _entities;
@@ -23,7 +23,7 @@ namespace FoodOrdering.Infrastructure.Repositories
         
         public async Task<IEnumerable<T>> GetAllAsync() => await _entities.ToListAsync();
 
-        public async Task<T> GetByIdAsync(Guid id) => await _entities.FindAsync(id);
+        public async Task<T> Get(Guid id) => await _entities.FindAsync(id);
        
         public void Remove(T entity) => _entities.Remove(entity);
     

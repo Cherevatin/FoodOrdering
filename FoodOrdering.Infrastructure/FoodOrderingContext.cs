@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FoodOrdering.Infrastructure.EntityConfigurations;
+
 using FoodOrdering.Domain.Aggregates.DishAggregate;
 using FoodOrdering.Domain.Aggregates.MenuAggregate;
 using FoodOrdering.Domain.Aggregates.BasketAggregate;
 using FoodOrdering.Domain.Aggregates.OrderAggregate;
+using FoodOrdering.Infrastructure.EntityConfigurations;
 
 namespace FoodOrdering.Infrastructure
 {
@@ -22,7 +23,6 @@ namespace FoodOrdering.Infrastructure
         {
 
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new MenuEntityConfiguration());

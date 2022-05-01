@@ -52,9 +52,6 @@ namespace FoodOrdering.Infrastructure.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("double precision");
-
                     b.HasKey("Id");
 
                     b.ToTable("Dishes");
@@ -159,16 +156,35 @@ namespace FoodOrdering.Infrastructure.Migrations
                             b1.Property<Guid>("DishId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<double?>("Calories")
+                            b1.Property<double>("Calories")
                                 .HasColumnType("double precision");
 
-                            b1.Property<double?>("Carbohydrates")
+                            b1.Property<double>("Carbohydrates")
                                 .HasColumnType("double precision");
 
-                            b1.Property<double?>("Fats")
+                            b1.Property<double>("Fats")
                                 .HasColumnType("double precision");
 
-                            b1.Property<double?>("Proteins")
+                            b1.Property<double>("Proteins")
+                                .HasColumnType("double precision");
+
+                            b1.HasKey("DishId");
+
+                            b1.ToTable("Dishes");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DishId");
+                        });
+
+                    b.OwnsOne("FoodOrdering.Domain.Aggregates.DishAggregate.Weight", "Weight", b1 =>
+                        {
+                            b1.Property<Guid>("DishId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("MesurementUnit")
+                                .HasColumnType("integer");
+
+                            b1.Property<double>("Value")
                                 .HasColumnType("double precision");
 
                             b1.HasKey("DishId");
@@ -180,6 +196,8 @@ namespace FoodOrdering.Infrastructure.Migrations
                         });
 
                     b.Navigation("Nutrients");
+
+                    b.Navigation("Weight");
                 });
 
             modelBuilder.Entity("FoodOrdering.Domain.Aggregates.MenuAggregate.Menu", b =>

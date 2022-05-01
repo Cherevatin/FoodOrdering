@@ -1,15 +1,13 @@
-﻿using AutoMapper;
-using FoodOrdering.Application.Dtos.Order;
-using FoodOrdering.Application.Dtos.Order.GotGroupByCustomer;
-using FoodOrdering.Domain.Aggregates.DishAggregate;
-using FoodOrdering.Domain.Aggregates.MenuAggregate;
-using FoodOrdering.Domain.Aggregates.OrderAggregate;
-using FoodOrdering.Domain.Common;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+
+using AutoMapper;
+
+using FoodOrdering.Domain.Common;
+using FoodOrdering.Domain.Aggregates.OrderAggregate;
+using FoodOrdering.Application.Dtos.Order;
+using FoodOrdering.Application.Exception;
 
 namespace FoodOrdering.Application.Services.OrderService
 {
@@ -27,66 +25,51 @@ namespace FoodOrdering.Application.Services.OrderService
 
         public async Task Place(Guid basketId, PlaceOrderDto dto)
         {
-            if (basketId == Guid.Empty)
-            {
-                throw new Exception("Id is empty");
-            }
-            else if (dto is null)
-            {
-                throw new Exception("DTO is empty");
-            }
-
             var basket = await _unitOfWork.Baskets.GetBasketById(basketId);
 
-            if(basket is null)
+            if(basket == null)
             {
-                throw new Exception("Basket not found");
+                throw new ApplicationNotFoundException("Basket not found");
             }
 
-            if (basket.IsNotEmpty())
+            if (basket.IsEmpty())
             {
-        
-                var groupedBasketItems = basket.BasketItems
-                    .GroupBy(p => p.MenuId)
-                    .ToDictionary(p => p.Key, p => p.ToList()) ;
+                throw new ApplicationValidationException("Basket is empty"); //  ?????
+            }
 
-                foreach(var basketItemGroup in groupedBasketItems)
+            var groupedBasketItems = basket.BasketItems
+                .GroupBy(p => p.MenuId)
+                .ToDictionary(p => p.Key, p => p.ToList()) ;
+
+            foreach(var basketItemGroup in groupedBasketItems)
+            {
+                var menu = await _unitOfWork.Menus.Get(basketItemGroup.Key);
+                    
+                Order order = new(basket.CustomerId, dto.ExecutionDate);
+
+                foreach(var basketItem in basketItemGroup.Value)
                 {
-                    Menu menu = await _unitOfWork.Menus.GetByIdAsync(basketItemGroup.Key);
-                    
-                    Order order = new(basket.CustomerId, dto.ExecutionDate);
-
-                    foreach(var basketItem in basketItemGroup.Value)
-                    {
-                        Dish dish = await _unitOfWork.Dishes.GetByIdAsync(basketItem.DishId);
-                        order.AddItem(dish.Id, dish.Name, dish.Price, basketItem.NumberOfServings);
-                    }
-                    
-                    await _unitOfWork.Orders.AddAsync(order);
+                    var dish = await _unitOfWork.Dishes.Get(basketItem.DishId);
+                    order.AddItem(dish.Id, dish.Name, dish.Price, basketItem.NumberOfServings);
                 }
+                    
+                await _unitOfWork.Orders.AddAsync(order);
+            }
 
-                _unitOfWork.Baskets.Remove(basket);
-                await _unitOfWork.Save();
-            }
-            else
-            {
-                throw new Exception("Basket is empty");
-            }
+            _unitOfWork.Baskets.Remove(basket);
+            await _unitOfWork.Save();
+
         }
 
         public async Task Accept(Guid orderId)
         {
-            if (orderId == Guid.Empty)
+            var order = await _unitOfWork.Orders.Get(orderId);
+
+            if (order == null)
             {
-                throw new Exception("Id is empty");
+                throw new ApplicationNotFoundException("Order not found");
             }
 
-            Order order = await _unitOfWork.Orders.Get(orderId);
-
-            if (order is null)
-            {
-                throw new Exception("Order not found");
-            }
             order.Accept();
             _unitOfWork.Orders.Update(order);
             await _unitOfWork.Save();
@@ -94,35 +77,22 @@ namespace FoodOrdering.Application.Services.OrderService
 
         public async Task Cancel(Guid orderId)
         {
-            if (orderId == Guid.Empty)
-            {
-                throw new Exception("Id is empty");
-            }
+            var order = await _unitOfWork.Orders.Get(orderId);
 
-            Order order = await _unitOfWork.Orders.Get(orderId);
-
-            if (order is null)
+            if (order == null)
             {
-                throw new Exception("Order not found");
+                throw new ApplicationNotFoundException("Order not found");
             }
             
-            if (DateTime.Now < order.ExecutionDate)
+            if (DateTime.Now > order.ExecutionDate)
             {
-                order.Cancel();
-                _unitOfWork.Orders.Update(order);
-                await _unitOfWork.Save();
+                throw new ApplicationValidationException("Too late, sorry");   // ????
+                
             }
-            else
-            {
-                throw new Exception("Too late, sorry");
-            }
+
+            order.Cancel();
+            _unitOfWork.Orders.Update(order);
+            await _unitOfWork.Save();
         }
-
-        //public async Task<GroupByCustomerDto> GroupByCustomer()
-        //{
-        //    var orders = await _unitOfWork.Orders.GetAllAsync();
-
-        //    var grouppedByCustomerOrders = orders.GroupBy(p => p.CustomerId);
-        //}
     }
 }

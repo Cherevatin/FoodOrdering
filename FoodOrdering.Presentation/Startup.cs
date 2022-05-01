@@ -19,6 +19,8 @@ using FoodOrdering.Domain.Aggregates.BasketAggregate;
 using FoodOrdering.Domain.Aggregates.OrderAggregate;
 using FoodOrdering.Application.Services.OrderService;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using FoodOrdering.Presentation.Middlewares;
+using FoodOrdering.Presentation.Extensions;
 
 namespace FoodOrdering.Presentation
 {
@@ -34,43 +36,10 @@ namespace FoodOrdering.Presentation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(
-                typeof(DishAutoMapperPresentation),
-                typeof(DishAutoMapperApplication),
-                typeof(MenuAutoMapperPresentation), 
-                typeof(MenuAutoMapperApplication),
-                typeof(BasketAutoMapperPresentation),
-                typeof(BasketAutoMapperApplication),
-                typeof(OrderAutoMapperPresentation)
-                );
+            services.AddCustomServices(Configuration);
 
+            services.AddControllers();
 
-            string connectionString = 
-                Configuration.GetConnectionString("DefaultConnection");
-
-            services.AddDbContext<FoodOrderingContext>(opt => opt.UseNpgsql(connectionString));
-
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            services.AddTransient<IDishRepository, DishRepository>();
-            services.AddTransient<IMenuRepository, MenuRepository>();
-            services.AddTransient<IBasketRepository, BasketRepository>();
-            services.AddTransient<IOrderRepository, OrderRepository>();
-
-            services.AddTransient<IDishService, DishService>();
-            services.AddTransient<IMenuService, MenuService>();
-            services.AddTransient<IBasketService, BasketService>();
-            services.AddTransient<IOrderService, OrderService>();
-
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //    .AddCookie(opt =>
-            //    {
-            //        opt.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-            //    });
-
-            services.AddControllersWithViews();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FoodOrdering", Version = "v1" });
@@ -86,6 +55,8 @@ namespace FoodOrdering.Presentation
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FoodOrdering v1"));
             }
+            app.UseExeptionMiddleware();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

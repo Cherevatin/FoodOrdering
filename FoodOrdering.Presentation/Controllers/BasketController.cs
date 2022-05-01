@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using FoodOrdering.Application.Services.BasketService;
+
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+
+using FoodOrdering.Application.Services.BasketService;
 using FoodOrdering.Presentation.ViewModels.Basket;
 using FoodOrdering.Application.Dtos.Basket;
-using FoodOrdering.Presentation.ViewModels.Basket.GotBasketViewModels;
 
 namespace FoodOrdering.Presentation.Controllers
 {
@@ -13,29 +14,14 @@ namespace FoodOrdering.Presentation.Controllers
     [ApiController]
     public class BasketController : Controller
     {
-        private readonly IBasketService _service;
+        private readonly IBasketService _basketService;
 
         private readonly IMapper _mapper;
 
-        public BasketController(IBasketService service, IMapper mapper)
+        public BasketController(IBasketService basketService, IMapper mapper)
         {
-            _service = service;
+            _basketService = basketService;
             _mapper = mapper;
-        }
-
-        [HttpGet("get")]
-        public async Task<IActionResult> GetBasket(Guid basketId)
-        {
-            try
-            {
-                GotBasketDto dto = await _service.Get(basketId);
-                GotBasketViewModel viewModel = _mapper.Map<GotBasketViewModel>(dto);
-                return Ok(viewModel);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
         }
 
         [HttpPost("create")]
@@ -43,18 +29,11 @@ namespace FoodOrdering.Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    CreateBasketDto dto = _mapper.Map<CreateBasketDto>(model);
+                var basketDto = _mapper.Map<CreateBasketDto>(model);
 
-                    await _service.Create(dto);
+                await _basketService.Create(basketDto);
 
-                    return Ok("Basket has been added");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return Ok("Basket has been added");
             }
             else
             {
@@ -63,14 +42,23 @@ namespace FoodOrdering.Presentation.Controllers
 
         }
 
+        [HttpGet("get")]
+        public async Task<IActionResult> GetBasket(Guid basketId)
+        {
+            var basketDto = await _basketService.Get(basketId);
+            var basketViewModel = _mapper.Map<GetBasketViewModel>(basketDto);
+            return Ok(basketViewModel);
+        }
+
+
         [HttpPut("update-number-of-servings")]
         public async Task<IActionResult> UpdateNumberOfServings(Guid basketId, UpdateBasketItemViewModel model)
         {
             if (ModelState.IsValid)
             {
-                UpdateBasketItemDto dto = _mapper.Map<UpdateBasketItemDto>(model);
+                var dto = _mapper.Map<UpdateBasketItemDto>(model);
 
-                await _service.UpdateNumberOfServings(basketId, dto);
+                await _basketService.UpdateNumberOfServings(basketId, dto);
 
                 return Ok("Number of servings has been updated");
             }
@@ -85,9 +73,9 @@ namespace FoodOrdering.Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                AddDishDto dto = _mapper.Map<AddDishDto>(model);
+                var addDishDto = _mapper.Map<AddDishDto>(model);
 
-                await _service.AddDish(dto);
+                await _basketService.AddDish(addDishDto);
 
                 return Ok("Dish has been added to basket");
             }
@@ -97,46 +85,25 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
-        [HttpDelete("delete-dish")]
+        [HttpPut("delete-dish")]
         public async Task<IActionResult> DeleteDishFromBasketBasket(Guid basketId, Guid dishId)
         {
-            try
-            {
-                await _service.DeleteDish(basketId, dishId);
+                await _basketService.DeleteDish(basketId, dishId);
                 return Ok("Dish has been deleted from basket");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
-        [HttpDelete("clear")]
+        [HttpPut("clear")]
         public async Task<IActionResult> ClearBasket(Guid basketId)
         {
-            try
-            {
-                await _service.Clear(basketId);
-                return Ok("Basket has been cleared");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _basketService.Clear(basketId);
+            return Ok("Basket has been cleared");
         }
 
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteBasket(Guid basketId)
         {
-            try
-            {
-                await _service.Delete(basketId);
-                return Ok("Basket has been deleted");
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _basketService.Delete(basketId);
+            return Ok("Basket has been deleted");
         }
     }
 }

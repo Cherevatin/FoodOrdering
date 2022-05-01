@@ -8,8 +8,8 @@ namespace FoodOrdering.Application.AutoMapper
     {
         public DishAutoMapperApplication()
         {
-            CreateMap<Dish, GotAllDishesDto>();
-            CreateMap<Dish, GotDishDto>();
+            CreateMap<Dish, GetAllDishesDto>();
+            CreateMap<Dish, GetDishDto>();
 
         }
     }

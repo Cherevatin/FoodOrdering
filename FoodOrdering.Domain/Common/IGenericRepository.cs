@@ -6,7 +6,7 @@ namespace FoodOrdering.Domain.Common
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<T> GetByIdAsync(Guid id);
+        Task<T> Get(Guid id);
 
         Task<IEnumerable<T>> GetAllAsync();
 

@@ -10,9 +10,12 @@ namespace FoodOrdering.Presentation.AutoMapper
         public DishAutoMapperPresentation()
         {
             CreateMap<AddDishViewModel, AddDishDto>();
-            CreateMap<EditDishViewModel, EditDishDto>();
-            CreateMap<GotDishDto, GotDishViewModel>();
-            CreateMap<GotAllDishesDto, GotAllDishesViewModel>();
+
+            CreateMap<EditDishViewModel, UpdateDishDto>();
+
+            CreateMap<GetDishDto, GetDishViewModel>();
+
+            CreateMap<GetAllDishesDto, GetAllDishesViewModel>();
         }
     }
 }

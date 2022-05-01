@@ -1,6 +1,7 @@
-﻿using FoodOrdering.Application.Dtos.Order;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+
+using FoodOrdering.Application.Dtos.Order;
 
 namespace FoodOrdering.Application.Services.OrderService
 {

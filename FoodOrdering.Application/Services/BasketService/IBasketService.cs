@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using FoodOrdering.Application.Dtos.Basket;
-using FoodOrdering.Domain.Aggregates.BasketAggregate;
 
 namespace FoodOrdering.Application.Services.BasketService
 {
     public interface IBasketService
     {
-        Task<GotBasketDto> Get(Guid basketId);
+        Task<GetBasketDto> Get(Guid basketId);
 
         Task Create(CreateBasketDto dto);
 

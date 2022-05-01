@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FoodOrdering.Presentation.ViewModels.Dish
+namespace FoodOrdering.Application.Dtos.Dish
 {
-    public class GotDishViewModel
+    public class UpdateDishDto
     {
         public string Name { get; set; }
 
@@ -22,6 +22,8 @@ namespace FoodOrdering.Presentation.ViewModels.Dish
 
         public double Calories { get; set; }
 
-        public double Weight { get; set; }
+        public double WeightValue { get; set; }
+
+        public int WeightMeasurementUnit { get; set; }
     }
 }

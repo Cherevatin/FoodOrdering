@@ -17,45 +17,14 @@ namespace FoodOrdering.Presentation.Controllers
     [ApiController]
     public class DishController : Controller
     {
-        private readonly IDishService _service;
+        private readonly IDishService _dishService;
 
         private readonly IMapper _mapper;
 
-        public DishController(IDishService service, IMapper mapper)
+        public DishController(IDishService dishService, IMapper mapper)
         {
-            _service = service;
+            _dishService = dishService;
             _mapper = mapper;
-        }
-
-        [HttpGet("get-all")]
-        public async Task<IActionResult> GetAllDishes()
-        {
-            try
-            {
-                var dto = await _service.GetAll();
-                var viewModel = _mapper.Map<List<GotAllDishesViewModel>>(dto);
-
-                return Ok(viewModel);
-            }
-            catch(Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
-
-        [HttpGet("get")]
-        public async Task<IActionResult> GetDish(Guid dishId)
-        {
-            try
-            {
-                var dto = await _service.Get(dishId);
-                var viewModel = _mapper.Map<GotDishViewModel>(dto);
-                return Ok(viewModel);
-            }
-            catch(Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
         }
 
         [HttpPost("add")]
@@ -65,7 +34,7 @@ namespace FoodOrdering.Presentation.Controllers
             {
                 AddDishDto dto = _mapper.Map<AddDishDto>(model);
 
-                await _service.Add(dto);
+                await _dishService.Add(dto);
 
                 return Ok("Dish has been created");
             }
@@ -75,21 +44,33 @@ namespace FoodOrdering.Presentation.Controllers
             }
         }
 
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAllDishes()
+        {
+            var dto = await _dishService.GetAll();
+            var viewModel = _mapper.Map<List<GetAllDishesViewModel>>(dto);
+
+            return Ok(viewModel);
+        }
+
+        [HttpGet("get")]
+        public async Task<IActionResult> GetDish(Guid dishId)
+        {
+            var dto = await _dishService.Get(dishId);
+            var viewModel = _mapper.Map<GetDishViewModel>(dto);
+            return Ok(viewModel);
+        }
+
+
         [HttpPut("edit")]
         public async Task<IActionResult> EditDish(Guid dishId, EditDishViewModel model)
         {
             if (ModelState.IsValid)
             {
-                EditDishDto dto = _mapper.Map<EditDishDto>(model);
-                try 
-                { 
-                    await _service.Update(dishId, dto);
-                    return Ok("Dish has been updated");
-                }
-                catch(Exception ex)
-                {
-                    return NotFound(ex.Message);
-                }
+                UpdateDishDto dto = _mapper.Map<UpdateDishDto>(model);
+          
+                await _dishService.Update(dishId, dto);
+                return Ok("Dish has been updated");
             }
             else
             {
@@ -100,15 +81,8 @@ namespace FoodOrdering.Presentation.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteDish(Guid dishId)
         {
-            try
-            {
-                await _service.Delete(dishId);
-                return Ok("Dish has been deleted");
-            }
-            catch(Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _dishService.Delete(dishId);
+            return Ok("Dish has been deleted");
         }
     }
 }

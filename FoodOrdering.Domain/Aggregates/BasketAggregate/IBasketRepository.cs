@@ -1,6 +1,7 @@
-﻿using FoodOrdering.Domain.Common;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+
+using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Domain.Aggregates.BasketAggregate
 {

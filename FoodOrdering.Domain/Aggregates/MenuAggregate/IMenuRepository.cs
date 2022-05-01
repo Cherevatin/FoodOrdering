@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Domain.Aggregates.MenuAggregate
@@ -8,6 +10,8 @@ namespace FoodOrdering.Domain.Aggregates.MenuAggregate
     {
         Task<bool> IsExist(Guid id);
 
-        Task<Menu> GetMenuWithDishesById(Guid id);
+        Task<Menu> GetMenuWithDishes(Guid id);
+
+        Task<List<Menu>> GetAllWithDishes();
     }
 }

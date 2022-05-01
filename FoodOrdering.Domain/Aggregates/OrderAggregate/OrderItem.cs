@@ -1,9 +1,10 @@
-﻿using FoodOrdering.Domain.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Domain.Aggregates.OrderAggregate
 {

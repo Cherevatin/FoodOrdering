@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using AutoMapper;
-using FoodOrdering.Application.Dtos.Dish;
-using FoodOrdering.Domain.Aggregates.DishAggregate;
+
 using FoodOrdering.Domain.Common;
+using FoodOrdering.Domain.Aggregates.DishAggregate;
+using FoodOrdering.Application.Dtos.Dish;
+using FoodOrdering.Application.Exception;
 
 namespace FoodOrdering.Application.Services.DishService
 {
@@ -21,89 +24,71 @@ namespace FoodOrdering.Application.Services.DishService
         }
         public async Task Add(AddDishDto dishDTO)
         {
-            Nutrients nutrients = new(dishDTO.Proteins, dishDTO.Fats, dishDTO.Carbohydrates, dishDTO.Calories);
-            Dish dish = new(dishDTO.Name, dishDTO.Ingredients, dishDTO.Price, nutrients, dishDTO.Weight);
+            Dish dish = new(dishDTO.Name, 
+                dishDTO.Ingredients, 
+                dishDTO.Price, 
+                dishDTO.Proteins, 
+                dishDTO.Fats, 
+                dishDTO.Carbohydrates, 
+                dishDTO.Calories,
+                dishDTO.WeightValue,
+                dishDTO.WeightMeasurementUnit);
 
             await _unitOfWork.Dishes.AddAsync(dish);
             await _unitOfWork.Save();
         }
 
-        public async Task Update(Guid id, EditDishDto dto)
+        public async Task Update(Guid id, UpdateDishDto dto)
         {
-            if (dto == null)
+            var DishToUpdate = await _unitOfWork.Dishes.Get(id);
+
+            if (DishToUpdate == null)
             {
-                throw new Exception("Dish not set");
-            }
-            else if (!await _unitOfWork.Dishes.IsExist(id))
-            {
-                throw new Exception("Dish not found");
+                throw new ApplicationNotFoundException("Dish not found");
             }
 
+            DishToUpdate.UpdateName(dto.Name)
+                .UpdateIngredients(dto.Ingredients)
+                .UpdatePrice(dto.Price)
+                .UpdateNutrients(dto.Proteins, dto.Fats, dto.Carbohydrates, dto.Calories)
+                .UpdateWeight(dto.WeightValue, dto.WeightMeasurementUnit);
 
-            Nutrients nutrients = new(dto.Proteins, dto.Fats, dto.Carbohydrates, dto.Calories);
-            Dish newDish = new(dto.Name, dto.Ingredients, dto.Price, nutrients, dto.Weight);
-
-            Dish oldDish = await _unitOfWork.Dishes.GetByIdAsync(id);
-
-            try
-            {
-                _unitOfWork.Dishes.Update(oldDish);
-                oldDish.Update(newDish);
-                await _unitOfWork.Save();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            _unitOfWork.Dishes.Update(DishToUpdate);
+            await _unitOfWork.Save();
         }
 
         public async Task Delete(Guid id)
         {
-            bool exist = await _unitOfWork.Dishes.IsExist(id);
+            var dish = await _unitOfWork.Dishes.Get(id);
 
-            if (exist)
+            if (dish == null)
             {
-                var dish = await _unitOfWork.Dishes.GetByIdAsync(id);
-                _unitOfWork.Dishes.Remove(dish);
-                await _unitOfWork.Save();
+                throw new ApplicationNotFoundException("Dish not found");
             }
-            else
-            {
-                throw new Exception("Dish not found");
-            }
+
+            _unitOfWork.Dishes.Remove(dish);
+            await _unitOfWork.Save();
         }
 
-        public async Task<IEnumerable<GotAllDishesDto>> GetAll()
+        public async Task<IEnumerable<GetAllDishesDto>> GetAll()
         {
             var dishes = await _unitOfWork.Dishes.GetAllAsync();
 
-            if (dishes is not null)
-            {
-                var dishDtoList = _mapper.Map<List<GotAllDishesDto>>(dishes);
+            var dishDtoList = _mapper.Map<List<GetAllDishesDto>>(dishes);
 
-                return dishDtoList;
-            }
-            else
-            {
-                throw new Exception("Dihes not found");
-            }
+            return dishDtoList;
         }
 
-        public async Task<GotDishDto> Get(Guid id)
+        public async Task<GetDishDto> Get(Guid id)
         {
+            var dish = await _unitOfWork.Dishes.Get(id);
 
-            if (id == Guid.Empty)
+            if (dish == null)
             {
-                throw new Exception("Dish ID not set");
-            }
-            else if (!await _unitOfWork.Dishes.IsExist(id))
-            {
-                throw new Exception("Dish not found");
+                throw new ApplicationNotFoundException("Dish not found");
             }
 
-            Dish dish = await _unitOfWork.Dishes.GetByIdAsync(id);
-
-            GotDishDto dishDTO = _mapper.Map<GotDishDto>(dish);
+            var dishDTO = _mapper.Map<GetDishDto>(dish);
 
             return dishDTO;
         }

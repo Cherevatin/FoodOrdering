@@ -29,6 +29,7 @@ namespace FoodOrdering.Infrastructure.EntityConfigurations
                 basketItemsBuilder.HasOne<Dish>().WithMany().HasForeignKey(b => b.DishId);
                 basketItemsBuilder.HasOne<Menu>().WithMany().HasForeignKey(b => b.MenuId);
 
+                basketItemsBuilder.Property(p => p.Id).ValueGeneratedNever();
                 basketItemsBuilder.Property(p => p.DishId).IsRequired();
                 basketItemsBuilder.Property(p => p.MenuId).IsRequired();
                 basketItemsBuilder.Property(p => p.BasketId).IsRequired();

@@ -6,12 +6,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodOrdering.Application\FoodOrdering.Application.csproj" />
-    <ProjectReference Include="..\FoodOrdering.Domain\FoodOrdering.Domain.csproj" />
     <ProjectReference Include="..\FoodOrdering.Infrastructure\FoodOrdering.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.16">
       <PrivateAssets>all</PrivateAssets>

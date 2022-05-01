@@ -1,11 +1,13 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+
+using AutoMapper;
+
 using FoodOrdering.Application.Dtos.Order;
 using FoodOrdering.Application.Services.OrderService;
 using FoodOrdering.Presentation.ViewModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace FoodOrdering.Presentation.Controllers
 {
@@ -13,13 +15,13 @@ namespace FoodOrdering.Presentation.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService _service;
+        private readonly IOrderService _orderService;
 
         private readonly IMapper _mapper;
 
-        public OrderController(IOrderService service, IMapper mapper)
+        public OrderController(IOrderService orderService, IMapper mapper)
         {
-            _service = service;
+            _orderService = orderService;
             _mapper = mapper;
         }
 
@@ -29,15 +31,9 @@ namespace FoodOrdering.Presentation.Controllers
             if (ModelState.IsValid)
             {
                 PlaceOrderDto dto = _mapper.Map<PlaceOrderDto>(model);
-                try
-                {
-                    await _service.Place(basketId, dto);
-                    return Ok("Order has been placed");
-                }
-                catch(Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+           
+                await _orderService.Place(basketId, dto);
+                return Ok("Order has been placed");
             }
             else
             {
@@ -53,15 +49,9 @@ namespace FoodOrdering.Presentation.Controllers
                 return BadRequest("Id is empty");
             }
 
-            try
-            {
-                await _service.Accept(id);
-                return Ok("Order has  been accepted");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _orderService.Accept(id);
+            return Ok("Order has  been accepted");
+     
         }
 
         [HttpPut("cancel")]
@@ -72,15 +62,8 @@ namespace FoodOrdering.Presentation.Controllers
                 return BadRequest("Id is empty");
             }
 
-            try
-            {
-                await _service.Cancel(id);
-                return Ok("Order has  been canceled");
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _orderService.Cancel(id);
+            return Ok("Order has  been canceled");
         }
     }
 }

@@ -6,7 +6,7 @@ namespace FoodOrdering.Presentation.ViewModels.Basket
     public class UpdateBasketItemViewModel
     {
         [Required]
-        public Guid itemId { get; set; }
+        public Guid ItemId { get; set; }
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Invalid number")]

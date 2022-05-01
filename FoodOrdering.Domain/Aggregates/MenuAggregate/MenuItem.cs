@@ -1,5 +1,6 @@
-﻿using FoodOrdering.Domain.Common;
-using System;
+﻿using System;
+
+using FoodOrdering.Domain.Common;
 
 namespace FoodOrdering.Domain.Aggregates.MenuAggregate
 {
