@@ -12,16 +12,18 @@ namespace FoodOrdering.Application.AutoMapper
         public BasketAutoMapperApplication()
         {
 
-            CreateMap<Basket, GetBasketDto>();
+            CreateMap<Basket, GetBasketDto>()
+                .ForMember(p => p.Menus, opt => opt.MapFrom(
+                    (src, dst, _, context) => context.Options.Items["Menus"]));
+
             CreateMap<Dish, GetBasketDto.Dish>()
                 .ForMember(p => p.DishId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(p => p.DishTitle, opt => opt.MapFrom(s => s.Name));
+
             CreateMap<Menu, GetBasketDto.Menu>()
                 .ForMember(p => p.MenuId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(p => p.Dishes, opt => opt.MapFrom(
-                    (src, dst, _, context) => context.Options.Items["Dishes"])
-                )
-                ;
+                    (src, dst, _, context) => context.Options.Items["Dishes"]));
 
         }
     }

@@ -33,29 +33,43 @@ namespace FoodOrdering.Application.Services.BasketService
                 throw new ApplicationNotFoundException("Basket not found");
             }
 
-            GetBasketDto basketDto = new()
+            var basketDto = _mapper.Map<GetBasketDto>(basket, opts =>
             {
-                CustomerId = basket.CustomerId,
-                Menus = new()
-            };
-
-            var grouppedByMenuDictionary = basket.BasketItems
+                opts.Items["Menus"] = basket.BasketItems
                 .GroupBy(p => p.MenuId)
-                .ToDictionary(p => p.Key, p => p.ToList());
-
-            foreach(var group in grouppedByMenuDictionary)
-            {
-                var menu = await _unitOfWork.Menus.Get(group.Key);
-                var basketMenu = _mapper.Map<GetBasketDto.Menu>(menu, opts =>
+                .ToDictionary(p => p.Key, p => p.ToList())
+                .Select(async p => _mapper.Map<GetBasketDto.Menu>(await _unitOfWork.Menus.GetMenuWithDishes(p.Key), opts =>
                 {
-
-                    opts.Items["Dishes"] = _mapper.Map<List<GetBasketDto.Dish>>(group.Value
+                    opts.Items["Dishes"] = _mapper.Map<List<GetBasketDto.Dish>>(p.Value
                             .Select(async p => await _unitOfWork.Dishes.Get(p.DishId))
                             .Select(r => r.Result));
+                }))
+                .Select(r => r.Result).ToList();
+            });
 
-                });
-                basketDto.Menus.Add(basketMenu);
-            }
+            //GetBasketDto basketDto = new()
+            //{
+            //    CustomerId = basket.CustomerId,
+            //    Menus = new()
+            //};
+
+            //var grouppedByMenu = basket.BasketItems
+            //    .GroupBy(p => p.MenuId).ToDictionary(p => p.Key, p => p.ToList());
+
+            //foreach(var group in grouppedByMenu)
+            //{
+            //    var menu = await _unitOfWork.Menus.Get(group.Key);
+            //    var basketMenu = _mapper.Map<GetBasketDto.Menu>(menu, opts =>
+            //    {
+
+            //        opts.Items["Dishes"] = _mapper.Map<List<GetBasketDto.Dish>>(group.Value
+            //                .Select(async p => await _unitOfWork.Dishes.Get(p.DishId))
+            //                .Select(r => r.Result));
+
+            //    });
+            //    basketDto.Menus.Add(basketMenu);
+            //}
+    
             return basketDto;
         }
 

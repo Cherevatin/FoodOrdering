@@ -63,7 +63,7 @@ namespace FoodOrdering.Application.Services.OrderService
 
         public async Task Accept(Guid orderId)
         {
-            var order = await _unitOfWork.Orders.Get(orderId);
+            var order = await _unitOfWork.Orders.GetOrder(orderId);
 
             if (order == null)
             {
@@ -77,7 +77,7 @@ namespace FoodOrdering.Application.Services.OrderService
 
         public async Task Cancel(Guid orderId)
         {
-            var order = await _unitOfWork.Orders.Get(orderId);
+            var order = await _unitOfWork.Orders.GetOrder(orderId);
 
             if (order == null)
             {

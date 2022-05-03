@@ -14,7 +14,7 @@ namespace FoodOrdering.Infrastructure.Repositories
         {
         }
 
-        public async Task<Order> Get(Guid id)
+        public async Task<Order> GetOrder(Guid id)
         {
             return await _entities.Include(p => p.OrderItems).FirstOrDefaultAsync(p => p.Id == id);
         }

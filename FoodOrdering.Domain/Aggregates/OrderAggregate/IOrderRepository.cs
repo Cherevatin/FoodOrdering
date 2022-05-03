@@ -8,7 +8,7 @@ namespace FoodOrdering.Domain.Aggregates.OrderAggregate
 {
     public interface IOrderRepository : IGenericRepository<Order>
     {
-        Task<Order> Get(Guid id);
+        Task<Order> GetOrder(Guid id);
 
         Task<ICollection<Order>> GetAll(Guid id);
     }
