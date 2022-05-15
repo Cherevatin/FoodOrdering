@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
+using AutoMapper;
 
 using FoodOrdering.Application.Services.BasketService;
 using FoodOrdering.Presentation.ViewModels.Basket;
@@ -12,10 +14,10 @@ namespace FoodOrdering.Presentation.Controllers
 {
     [Route("api/basket")]
     [ApiController]
+    [Authorize]
     public class BasketController : Controller
     {
         private readonly IBasketService _basketService;
-
         private readonly IMapper _mapper;
 
         public BasketController(IBasketService basketService, IMapper mapper)
@@ -49,7 +51,6 @@ namespace FoodOrdering.Presentation.Controllers
             var basketViewModel = _mapper.Map<GetBasketViewModel>(basketDto);
             return Ok(basketViewModel);
         }
-
 
         [HttpPut("update-number-of-servings")]
         public async Task<IActionResult> UpdateNumberOfServings(Guid basketId, UpdateBasketItemViewModel model)

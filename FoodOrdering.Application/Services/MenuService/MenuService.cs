@@ -15,14 +15,15 @@ namespace FoodOrdering.Application.Services.MenuService
     public class MenuService : IMenuService
     {
         private readonly IUnitOfWork _unitOfWork;
-
         private readonly IMapper _mapper;
+        
         public MenuService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
 
         }
+        
         public async Task<IEnumerable<GetAllMenusDto>> GetAll()
         {
             var menus = await _unitOfWork.Menus.GetAllWithDishes();
@@ -46,7 +47,7 @@ namespace FoodOrdering.Application.Services.MenuService
             return menuDtoList;
         }
 
-        public async Task<GetMenuDto> GetMenu(Guid id)
+        public async Task<GetMenuDto> Get(Guid id)
         {
             var menu = await _unitOfWork.Menus.GetMenuWithDishes(id);
 

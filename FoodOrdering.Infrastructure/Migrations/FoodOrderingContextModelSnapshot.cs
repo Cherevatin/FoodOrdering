@@ -22,7 +22,6 @@ namespace FoodOrdering.Infrastructure.Migrations
             modelBuilder.Entity("FoodOrdering.Domain.Aggregates.BasketAggregate.Basket", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CustomerId")
@@ -36,7 +35,6 @@ namespace FoodOrdering.Infrastructure.Migrations
             modelBuilder.Entity("FoodOrdering.Domain.Aggregates.DishAggregate.Dish", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("ImageUrl")
@@ -60,7 +58,6 @@ namespace FoodOrdering.Infrastructure.Migrations
             modelBuilder.Entity("FoodOrdering.Domain.Aggregates.MenuAggregate.Menu", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("ExpirationDate")
@@ -80,7 +77,6 @@ namespace FoodOrdering.Infrastructure.Migrations
             modelBuilder.Entity("FoodOrdering.Domain.Aggregates.OrderAggregate.Order", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -92,12 +88,47 @@ namespace FoodOrdering.Infrastructure.Migrations
                     b.Property<DateTime>("ExecutionDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("FoodOrdering.Domain.Aggregates.UserAggregate.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("FoodOrdering.Domain.Aggregates.BasketAggregate.Basket", b =>
@@ -105,7 +136,6 @@ namespace FoodOrdering.Infrastructure.Migrations
                     b.OwnsMany("FoodOrdering.Domain.Aggregates.BasketAggregate.BasketItem", "BasketItems", b1 =>
                         {
                             b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid");
 
                             b1.Property<Guid>("BasketId")
@@ -181,8 +211,9 @@ namespace FoodOrdering.Infrastructure.Migrations
                             b1.Property<Guid>("DishId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<int>("MesurementUnit")
-                                .HasColumnType("integer");
+                            b1.Property<string>("MesurementUnit")
+                                .IsRequired()
+                                .HasColumnType("text");
 
                             b1.Property<double>("Value")
                                 .HasColumnType("double precision");
@@ -205,7 +236,6 @@ namespace FoodOrdering.Infrastructure.Migrations
                     b.OwnsMany("FoodOrdering.Domain.Aggregates.MenuAggregate.MenuItem", "MenuItems", b1 =>
                         {
                             b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid");
 
                             b1.Property<Guid>("DishId")
@@ -240,7 +270,6 @@ namespace FoodOrdering.Infrastructure.Migrations
                     b.OwnsMany("FoodOrdering.Domain.Aggregates.OrderAggregate.OrderItem", "OrderItems", b1 =>
                         {
                             b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid");
 
                             b1.Property<Guid>("DishId")

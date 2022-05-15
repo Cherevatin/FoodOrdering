@@ -35,7 +35,7 @@ namespace FoodOrdering.Application.Dtos.Menu
 
             public double WeightValue { get; set; }
 
-            public int WeightMeasurementUnit { get; set; }
+            public string WeightMeasurementUnit { get; set; }
         }
     }
 }

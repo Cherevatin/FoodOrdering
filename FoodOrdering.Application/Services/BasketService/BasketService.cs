@@ -15,7 +15,6 @@ namespace FoodOrdering.Application.Services.BasketService
     public class BasketService : IBasketService
     {
         private readonly IUnitOfWork _unitOfWork;
-
         private readonly IMapper _mapper;
 
         public BasketService(IUnitOfWork unitOfWork, IMapper mapper)
@@ -72,6 +71,20 @@ namespace FoodOrdering.Application.Services.BasketService
     
             return basketDto;
         }
+        
+        public async Task Create(CreateBasketDto dto)
+        {
+            bool exists = await _unitOfWork.Baskets.BasketExists(dto.CustomerId);
+
+            if (exists)
+            {
+                throw new ApplicationAlreadyExistsException("Basket for this customer already exists");
+            }
+
+            Basket basket = new(dto.CustomerId);
+            await _unitOfWork.Baskets.AddAsync(basket);
+            await _unitOfWork.Save();
+        }
 
         public async Task AddDish(AddDishDto dto)
         {
@@ -103,20 +116,6 @@ namespace FoodOrdering.Application.Services.BasketService
             basket.UpdateItem(dto.ItemId, dto.NumberOfServings);
 
             _unitOfWork.Baskets.Update(basket);
-            await _unitOfWork.Save();
-        }
-
-        public async Task Create(CreateBasketDto dto)
-        {
-            bool exists = await _unitOfWork.Baskets.BasketExists(dto.CustomerId);
-
-            if (exists)
-            {
-                throw new ApplicationAlreadyExistsException("Basket for this customer already exists");
-            }
-
-            Basket basket = new(dto.CustomerId);
-            await _unitOfWork.Baskets.AddAsync(basket);
             await _unitOfWork.Save();
         }
 

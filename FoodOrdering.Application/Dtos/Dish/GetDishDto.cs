@@ -20,7 +20,7 @@ namespace FoodOrdering.Application.Dtos.Dish
 
         public double WeightValue { get; set; }
 
-        public int WeightMeasurementUnit { get; set; }
+        public string WeightMeasurementUnit { get; set; }
 
     }
 }

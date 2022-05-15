@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
+using AutoMapper;
 
 using FoodOrdering.Application.Dtos.Menu;
 using FoodOrdering.Presentation.ViewModels.Menu;
@@ -14,10 +16,10 @@ namespace FoodOrdering.Presentation.Controllers
 {
     [Route("api/menu")]
     [ApiController]
+    [Authorize(Roles = "Manager, Cook")]
     public class MenuController : Controller
     {
         private readonly IMenuService _menuService;
-
         private readonly IMapper _mapper;
         public MenuController(IMenuService menuService, IMapper mapper)
         {
@@ -44,6 +46,7 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpGet("get-all")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllMenus()
         {
             var allMenusDto = await _menuService.GetAll();
@@ -51,16 +54,15 @@ namespace FoodOrdering.Presentation.Controllers
             return Ok(allMenusViewModel);
         }
 
-
         [HttpGet("get")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetMenu(Guid menuId)
         {
-            var dto = await _menuService.GetMenu(menuId);
+            var dto = await _menuService.Get(menuId);
             var viewModel = _mapper.Map<GetMenuViewModel>(dto);
 
             return Ok(viewModel);
         }
-
 
         [HttpPut("add-dish")]
         public async Task<IActionResult> AddDish(Guid menuId, AddDishToMenuViewModel model)

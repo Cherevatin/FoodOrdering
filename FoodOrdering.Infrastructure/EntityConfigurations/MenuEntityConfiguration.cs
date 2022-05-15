@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
+﻿using System;
 using FoodOrdering.Domain.Aggregates.MenuAggregate;
 using FoodOrdering.Domain.Aggregates.DishAggregate;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FoodOrdering.Infrastructure.EntityConfigurations
 {
@@ -12,6 +13,8 @@ namespace FoodOrdering.Infrastructure.EntityConfigurations
         {
             var navigation = menuBuilder.Metadata.FindNavigation(nameof(Menu.MenuItems));
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            menuBuilder.Property(p => p.Id).ValueGeneratedNever();
 
             menuBuilder.OwnsMany(menu => menu.MenuItems, menuItemsBuilder =>
             {
@@ -25,6 +28,7 @@ namespace FoodOrdering.Infrastructure.EntityConfigurations
                 menuItemsBuilder.HasIndex(p => p.DishId);
 
                 menuItemsBuilder.Property(p => p.Id).ValueGeneratedNever();
+
                 menuItemsBuilder.Property<Guid>("MenuId").IsRequired();
                 menuItemsBuilder.Property<Guid>("DishId").IsRequired();
 

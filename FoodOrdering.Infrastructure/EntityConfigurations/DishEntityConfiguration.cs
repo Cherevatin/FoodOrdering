@@ -1,11 +1,7 @@
-﻿using FoodOrdering.Domain.Aggregates.DishAggregate;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using FoodOrdering.Domain.Aggregates.DishAggregate;
 
 namespace FoodOrdering.Infrastructure.EntityConfigurations
 {
@@ -20,6 +16,8 @@ namespace FoodOrdering.Infrastructure.EntityConfigurations
             //navigation1.SetPropertyAccessMode(PropertyAccessMode.Field);                           ???
 
             dishBuilder.HasKey(p => p.Id);
+            
+            dishBuilder.Property(p => p.Id).ValueGeneratedNever();
 
             dishBuilder.Property(p => p.Name).IsRequired();
             dishBuilder.Property(p => p.Price).IsRequired();
@@ -30,6 +28,8 @@ namespace FoodOrdering.Infrastructure.EntityConfigurations
             {
                 weightBuilder.Property(p => p.MesurementUnit).IsRequired();
                 weightBuilder.Property(p => p.Value).IsRequired();
+
+                weightBuilder.Property(p => p.MesurementUnit).HasConversion<string>();
             });
             
         }

@@ -14,7 +14,6 @@ namespace FoodOrdering.Application.Services.DishService
     public class DishService : IDishService
     {
         private readonly IUnitOfWork _unitOfWork;
-
         private readonly IMapper _mapper;
 
         public DishService(IUnitOfWork unitOfWork, IMapper mapper)
@@ -22,6 +21,30 @@ namespace FoodOrdering.Application.Services.DishService
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        
+        public async Task<IEnumerable<GetAllDishesDto>> GetAll()
+        {
+            var dishes = await _unitOfWork.Dishes.GetAllAsync();
+
+            var dishDtoList = _mapper.Map<List<GetAllDishesDto>>(dishes);
+
+            return dishDtoList;
+        }
+        
+        public async Task<GetDishDto> Get(Guid id)
+        {
+            var dish = await _unitOfWork.Dishes.Get(id);
+
+            if (dish == null)
+            {
+                throw new ApplicationNotFoundException("Dish not found");
+            }
+
+            var dishDTO = _mapper.Map<GetDishDto>(dish);
+
+            return dishDTO;
+        }
+        
         public async Task Add(AddDishDto dishDTO)
         {
             Dish dish = new(dishDTO.Name, 
@@ -70,27 +93,6 @@ namespace FoodOrdering.Application.Services.DishService
             await _unitOfWork.Save();
         }
 
-        public async Task<IEnumerable<GetAllDishesDto>> GetAll()
-        {
-            var dishes = await _unitOfWork.Dishes.GetAllAsync();
 
-            var dishDtoList = _mapper.Map<List<GetAllDishesDto>>(dishes);
-
-            return dishDtoList;
-        }
-
-        public async Task<GetDishDto> Get(Guid id)
-        {
-            var dish = await _unitOfWork.Dishes.Get(id);
-
-            if (dish == null)
-            {
-                throw new ApplicationNotFoundException("Dish not found");
-            }
-
-            var dishDTO = _mapper.Map<GetDishDto>(dish);
-
-            return dishDTO;
-        }
     }
 }

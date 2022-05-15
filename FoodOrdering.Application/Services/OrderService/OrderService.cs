@@ -14,7 +14,6 @@ namespace FoodOrdering.Application.Services.OrderService
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
-
         private readonly IMapper _mapper;
 
         public OrderService(IUnitOfWork unitOfWork, IMapper mapper)

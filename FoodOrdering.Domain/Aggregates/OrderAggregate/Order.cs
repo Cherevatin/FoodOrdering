@@ -34,7 +34,6 @@ namespace FoodOrdering.Domain.Aggregates.OrderAggregate
         public Order AddItem(Guid dishId, string dishTitle, double dishPrice, int units)
         {
             _orderItems.Add(new OrderItem(dishId, dishTitle, dishPrice, units));
-
             return this;
         }
 
@@ -46,23 +45,25 @@ namespace FoodOrdering.Domain.Aggregates.OrderAggregate
                 throw new DomainNotFoundException("Item not found");
             }
             _orderItems.Remove(item);
-
             return this;
         }
 
-        public void Cancel()
+        public Order Cancel()
         {
             Status = StatusCode.Cancelled;
+            return this;
         }
 
-        public void Complete()
+        public Order Complete()
         {
             Status = StatusCode.Completed;
+            return this;
         }
 
-        public void Accept()
+        public Order Accept()
         {
             Status = StatusCode.Accepted;
+            return this;
         }
 
     }

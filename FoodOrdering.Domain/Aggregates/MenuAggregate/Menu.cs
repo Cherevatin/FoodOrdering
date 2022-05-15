@@ -19,7 +19,10 @@ namespace FoodOrdering.Domain.Aggregates.MenuAggregate
 
         public Menu() { }
 
-        public Menu(DateTime startDate, DateTime expirationDate, bool readyToOrder, List<Guid> dishesId)
+        public Menu(DateTime startDate, 
+            DateTime expirationDate, 
+            bool readyToOrder, 
+            List<Guid> dishesId)
         {
             StartDate = startDate;
             ExpirationDate = expirationDate;
@@ -27,20 +30,24 @@ namespace FoodOrdering.Domain.Aggregates.MenuAggregate
             AddDishes(dishesId);
         }
 
-        public void AddDish(Guid dishId)
+        public Menu AddDish(Guid dishId)
         {
             _menuItems.Add(new MenuItem(Id, dishId));
+            return this;
         }
 
-        public void AddDishes(List<Guid> dishesId)
+        public Menu AddDishes(List<Guid> dishesId)
         {
             dishesId.ForEach(dishId =>
             {
                 AddDish(dishId);
             });
+            return this;
         }
 
-        public Menu UpdateDetails(DateTime startDate, DateTime expirationDate, bool readyToOrder)
+        public Menu UpdateDetails(DateTime startDate, 
+            DateTime expirationDate, 
+            bool readyToOrder)
         {
             StartDate = startDate;
             ExpirationDate = expirationDate;

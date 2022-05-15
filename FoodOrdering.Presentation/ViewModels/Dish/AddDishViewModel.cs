@@ -43,5 +43,9 @@ namespace FoodOrdering.Presentation.ViewModels.Dish
         [Range(0, double.MaxValue, ErrorMessage = "Please enter positive number")]
         [Display(Name = "Dish weight")]
         public double Weight { get; set; }
+
+        [Required]
+        [Display(Name = "Dish weight measurement unit")]
+        public int WeightMeasurementUnit { get; set; }
     }
 }

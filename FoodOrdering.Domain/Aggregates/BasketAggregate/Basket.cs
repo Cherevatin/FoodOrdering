@@ -25,12 +25,13 @@ namespace FoodOrdering.Domain.Aggregates.BasketAggregate
             CustomerId = employeeId;
         }
 
-        public void AddItem(Guid dishId, Guid menuId)
+        public Basket AddItem(Guid dishId, Guid menuId)
         {
             _basketItems.Add(new BasketItem(dishId, menuId, Id));
+            return this;
         }
 
-        public void DeleteItem(Guid itemId)
+        public Basket DeleteItem(Guid itemId)
         {
             var item = _basketItems.FirstOrDefault(p => p.DishId == itemId);
             if (item == null)
@@ -38,17 +39,20 @@ namespace FoodOrdering.Domain.Aggregates.BasketAggregate
                 throw new DomainNotFoundException("Item not found");
             }
             _basketItems.Remove(item);
+            return this;
         }
 
-        public void UpdateItem(Guid itemId, int numberOfServings)
+        public Basket UpdateItem(Guid itemId, int numberOfServings)
         {
             var item = _basketItems.FirstOrDefault(item => item.Id == itemId);
             item.UpdateNumberOfServings(numberOfServings);
+            return this;
         }
 
-        public void ClearItems()
+        public Basket ClearItems()
         {
             _basketItems.Clear();
+            return this;
         }
 
         public bool IsEmpty()

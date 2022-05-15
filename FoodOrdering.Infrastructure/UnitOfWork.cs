@@ -5,12 +5,15 @@ using FoodOrdering.Domain.Aggregates.DishAggregate;
 using FoodOrdering.Domain.Aggregates.MenuAggregate;
 using FoodOrdering.Domain.Aggregates.BasketAggregate;
 using FoodOrdering.Domain.Aggregates.OrderAggregate;
+using FoodOrdering.Domain.Aggregates.UserAggregate;
 
 namespace FoodOrdering.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly FoodOrderingContext _context;
+
+        public IUserRepository Users { get; }
 
         public IDishRepository Dishes { get; }
 
@@ -24,16 +27,17 @@ namespace FoodOrdering.Infrastructure
             IDishRepository dishRepository, 
             IMenuRepository menuRepository,
             IBasketRepository basketRepository,
-            IOrderRepository orderRepository)
+            IOrderRepository orderRepository, 
+            IUserRepository userRepository)
         {
             _context = context;
             Dishes = dishRepository;
             Menus = menuRepository;
             Baskets = basketRepository;
             Orders = orderRepository;
+            Users = userRepository;
         }
 
-        public async Task<int> Save() => await _context.SaveChangesAsync();
-       
+        public async Task Save() => await _context.SaveChangesAsync();
     }
 }

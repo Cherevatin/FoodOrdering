@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using AutoMapper;
 
@@ -13,10 +14,10 @@ namespace FoodOrdering.Presentation.Controllers
 {
     [Route("api/order")]
     [ApiController]
-    public class OrderController : ControllerBase
+    [Authorize]
+    public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
-
         private readonly IMapper _mapper;
 
         public OrderController(IOrderService orderService, IMapper mapper)
@@ -26,7 +27,7 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpPost("place")]
-        public async Task<IActionResult> PlaceOrder(Guid basketId, PlaceOrderViewModel model)
+        public async Task<IActionResult> PlaceOrder(Guid basketId, [FromBody] PlaceOrderViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -42,6 +43,7 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpPut("accept")]
+        [Authorize(Roles = "Cook")]
         public async Task<IActionResult> AcceptOrder(Guid id)
         {
             if (id == Guid.Empty)
@@ -55,6 +57,7 @@ namespace FoodOrdering.Presentation.Controllers
         }
 
         [HttpPut("cancel")]
+        [Authorize(Roles = "Cook")]
         public async Task<IActionResult> CancelOrder(Guid id)
         {
             if (id == Guid.Empty)

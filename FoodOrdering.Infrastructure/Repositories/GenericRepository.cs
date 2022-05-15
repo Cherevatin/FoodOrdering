@@ -18,7 +18,6 @@ namespace FoodOrdering.Infrastructure.Repositories
             _context = context;
             _entities = _context.Set<T>();
         }
-
         public async Task AddAsync(T entity) => await _entities.AddAsync(entity);
         
         public async Task<IEnumerable<T>> GetAllAsync() => await _entities.ToListAsync();

@@ -8,7 +8,7 @@ namespace FoodOrdering.Application.Services.BasketService
     public interface IBasketService
     {
         Task<GetBasketDto> Get(Guid basketId);
-
+        
         Task Create(CreateBasketDto dto);
 
         Task AddDish(AddDishDto dto);
@@ -20,6 +20,5 @@ namespace FoodOrdering.Application.Services.BasketService
         Task DeleteDish(Guid basketId, Guid dishId);
 
         Task Delete(Guid basketId);
-
     }
 }

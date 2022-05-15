@@ -10,8 +10,8 @@ namespace FoodOrdering.Application.Services.MenuService
     {
         Task<IEnumerable<GetAllMenusDto>> GetAll();
 
-        Task<GetMenuDto> GetMenu(Guid id);
-
+        Task<GetMenuDto> Get(Guid id);
+        
         Task Add(AddMenuDto dto);
 
         Task AddDish(Guid id, AddDishToMenuDto dto);

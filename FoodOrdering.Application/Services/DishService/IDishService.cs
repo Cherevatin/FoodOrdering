@@ -11,13 +11,11 @@ namespace FoodOrdering.Application.Services.DishService
         Task<IEnumerable<GetAllDishesDto>> GetAll();
 
         Task<GetDishDto> Get(Guid id);
-
+        
         Task Add(AddDishDto dto);
 
         Task Update(Guid id, UpdateDishDto dto);
 
         Task Delete(Guid id);
-
-
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FoodOrdering.Application.Dtos.Dish
+﻿namespace FoodOrdering.Application.Dtos.Dish
 {
     public class UpdateDishDto
     {

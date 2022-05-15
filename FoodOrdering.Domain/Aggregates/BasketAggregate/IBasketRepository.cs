@@ -10,6 +10,5 @@ namespace FoodOrdering.Domain.Aggregates.BasketAggregate
         Task<bool> BasketExists(Guid id);
 
         Task<Basket> GetBasketById(Guid id);
-
     }
 }

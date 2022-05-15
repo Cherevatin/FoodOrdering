@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using FoodOrdering.Domain.Common;
 
@@ -18,7 +14,10 @@ namespace FoodOrdering.Domain.Aggregates.OrderAggregate
 
         public int Units { get; private set; }
 
-        public OrderItem(Guid dishId, string dishTitle, double dishPrice, int units)
+        public OrderItem(Guid dishId, 
+            string dishTitle, 
+            double dishPrice, 
+            int units)
         {
             DishId = dishId;
             DishTitle = dishTitle;

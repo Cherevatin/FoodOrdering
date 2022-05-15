@@ -12,7 +12,10 @@ namespace FoodOrdering.Domain.Aggregates.DishAggregate
 
         public double Calories { get; private set; }
 
-        public Nutrients(double proteins, double fats, double carbohydrates, double calories)
+        public Nutrients(double proteins, 
+            double fats, 
+            double carbohydrates, 
+            double calories)
         {
             Proteins = proteins;
             Fats = fats;
@@ -27,6 +30,5 @@ namespace FoodOrdering.Domain.Aggregates.DishAggregate
             Carbohydrates = nutrients.Carbohydrates;
             Calories = nutrients.Calories;
         }
-
     }
 }
